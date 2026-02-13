@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Approvals - Pencil Royal Admin</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="logo">
+        <img src="../assets/img/logo.jpg" alt="Pencil Royals Logo" style="height: 50px; width: auto; object-fit: contain; margin-right: 12px;">
+        <span style="vertical-align: middle; font-size: 20px;">Pencil Royals</span>
+      </div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="schools-approval.html" class="active">Approvals</a>
+        <a href="competitions.html">Competitions</a>
+        <a href="students-overview.html">Students</a>
+        <a href="results-management.html">Results</a>
+        <button id="logoutBtn" class="btn outline">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Approve Schools</h1>
+    <ul id="pendingSchools" class="school-list"></ul>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    async function loadPending() {
+      const sb = await getSupabase();
+      const { data: schools } = await sb.from('schools').select('*').eq('approved', false);
+      const list = document.getElementById('pendingSchools');
+      list.innerHTML = '';
+      schools.forEach(s => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${s.name} (${s.location})
+          <button onclick="approveSchool('${s.id}')">Approve</button>
+          <button onclick="rejectSchool('${s.id}')">Reject</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    async function approveSchool(id) {
+      const sb = await getSupabase();
+      const { error } = await sb.from('schools').update({ approved: true }).eq('id', id);
+      if (!error) {
+        showAlert('success', 'School approved');
+        loadPending();
+      }
+    }
+
+    async function rejectSchool(id) {
+      const sb = await getSupabase();
+      const { error } = await sb.from('schools').delete().eq('id', id);
+      if (!error) {
+        showAlert('success', 'School rejected');
+        loadPending();
+      }
+    }
+
+    loadPending();
+  </script>
+</body>
+</html>

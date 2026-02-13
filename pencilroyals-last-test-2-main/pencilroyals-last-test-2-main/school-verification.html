@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Verification - Pencil Royals</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .verification-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .verification-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .verification-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .verification-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .school-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-row label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-row value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .admin-contact {
+            background: #e7f3ff;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .admin-contact h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .admin-phone {
+            font-size: 24px;
+            color: #667eea;
+            font-weight: bold;
+            font-family: monospace;
+            text-align: center;
+            padding: 10px 0;
+            border: 2px dashed #667eea;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .admin-contact p {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input[type="text"] {
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-logout {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-logout:hover {
+            background: #e7f3ff;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .verification-steps {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .verification-steps h4 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .steps-list {
+            list-style: none;
+        }
+
+        .steps-list li {
+            padding: 8px 0;
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+
+        .steps-list li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .verification-complete {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .verification-complete .icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .verification-complete h2 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .verification-complete p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .countdown {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .debug-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .debug-button:hover {
+            background: #5a6268;
+        }
+
+        .debug-panel {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .debug-panel.show {
+            display: block;
+        }
+
+        .debug-panel h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .debug-output {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 11px;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+
+        .debug-output.error {
+            background: #fff5f5;
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .debug-output.success {
+            background: #f5fff5;
+            color: #28a745;
+            border-color: #28a745;
+        }
+
+        .debug-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .debug-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .debug-btn-test {
+            background: #667eea;
+            color: white;
+        }
+
+        .debug-btn-test:hover {
+            background: #5568d3;
+        }
+
+        .debug-btn-clear {
+            background: #ddd;
+            color: #333;
+        }
+
+        .debug-btn-clear:hover {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <div id="loadingState">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading verification status...</p>
+            </div>
+        </div>
+
+        <div id="verificationContent" style="display: none;">
+            <!-- Header -->
+            <div class="verification-header">
+                <h1>School Verification</h1>
+                <p>Complete your registration to start using Pencil Royals</p>
+                <span class="status-badge" id="statusBadge"></span>
+            </div>
+
+            <!-- Messages -->
+            <div id="message" class="message"></div>
+
+            <!-- School Info -->
+            <div class="school-info">
+                <div class="info-row">
+                    <label>School Name:</label>
+                    <value id="schoolName">-</value>
+                </div>
+                <div class="info-row">
+                    <label>Status:</label>
+                    <value id="verificationStatus">-</value>
+                </div>
+                <div class="info-row">
+                    <label>Submitted:</label>
+                    <value id="submittedDate">-</value>
+                </div>
+            </div>
+
+            <!-- Pending Section (shown while pending) -->
+            <div id="pendingSection">
+                <!-- Admin Contact -->
+                <div class="admin-contact">
+                    <h3>📱 Send Payment</h3>
+                    <p>Please send your registration fee to this phone number:</p>
+                    <div class="admin-phone" id="adminPhone">Loading...</div>
+                    <p><strong>Important:</strong> After sending the money, you will receive a transaction ID. Copy it and paste it below.</p>
+                </div>
+
+                <!-- Verification Steps -->
+                <div class="verification-steps">
+                    <h4>Verification Steps:</h4>
+                    <ul class="steps-list">
+                        <li>Send payment to the phone number above</li>
+                        <li>Copy your transaction ID from the payment receipt</li>
+                        <li>Paste the transaction ID below</li>
+                        <li>Wait for admin approval</li>
+                    </ul>
+                </div>
+
+                <!-- Transaction ID Form -->
+                <div class="form-group">
+                    <label for="transactionId">Transaction ID:</label>
+                    <input 
+                        type="text" 
+                        id="transactionId" 
+                        placeholder="e.g., TRN-20260209-12345"
+                        maxlength="100"
+                    >
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button class="btn-submit" id="submitBtn" onclick="submitVerification()">
+                        Submit Transaction ID
+                    </button>
+                </div>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+
+                <!-- Auto-check info -->
+                <div class="countdown">
+                    Checking for approval automatically...
+                </div>
+            </div>
+
+            <!-- Approved Section (shown after approval) -->
+            <div id="approvedSection" style="display: none;">
+                <div class="verification-complete">
+                    <div class="icon">✅</div>
+                    <h2>Verification Approved!</h2>
+                    <p>Your school has been verified and is ready to use.</p>
+                    <p>Redirecting to dashboard...</p>
+                </div>
+            </div>
+
+            <!-- Rejected Section (shown if rejected) -->
+            <div id="rejectedSection" style="display: none;">
+                <div class="verification-complete">
+                    <div class="icon">❌</div>
+                    <h2>Verification Rejected</h2>
+                    <p id="rejectionReason">Your verification was rejected. Please contact the admin for more information.</p>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Debug Section -->
+            <button class="debug-button" onclick="toggleDebugPanel()">🔧 Debug Connection</button>
+            <div id="debugPanel" class="debug-panel">
+                <h3>🔍 Database Connection Debug</h3>
+                <div id="debugOutput" class="debug-output">Click "Test Connection" to start debugging...</div>
+                <div class="debug-buttons">
+                    <button class="debug-btn debug-btn-test" onclick="testSupabaseConnection()">Test Connection</button>
+                    <button class="debug-btn debug-btn-clear" onclick="clearDebugOutput()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-client.js"></script>
+    <script>
+        let currentUser = null;
+        let schoolId = null;
+        let verificationCheckInterval = null;
+        const ADMIN_PHONE = "+256 705 498743"; // Change this to your admin phone number
+
+        async function init() {
+            try {
+                console.log('🔄 Initializing verification page...');
+                
+                let hasError = false;
+                let errorMessage = '';
+
+                try {
+                    // Get Supabase instance (waits for library to load)
+                    console.log('⏳ Waiting for Supabase to load...');
+                    const supabase = await window.getSupabase();
+                    console.log('✅ Supabase loaded');
+
+                    // Get current user
+                    console.log('👤 Getting current user...');
+                    const { data: { user }, error: authError } = await supabase.auth.getUser();
+                    
+                    if (authError) {
+                        console.error('Auth error:', authError);
+                        throw authError;
+                    }
+                    
+                    if (!user) {
+                        console.log('⚠️ No user found, redirecting to login');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    currentUser = user;
+                    console.log('✅ User authenticated:', user.email);
+
+                    // Get school info
+                    console.log('🏫 Loading school info...');
+                    
+                    // Try to get school from cookie first (faster)
+                    function getCookie(name) {
+                        const v = document.cookie.match('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)');
+                        return v ? decodeURIComponent(v[1]) : null;
+                    }
+                    
+                    const cookieSchoolId = getCookie('pencil_school_id');
+                    let school = null;
+                    
+                    // First try to load school by cookie ID if available
+                    if (cookieSchoolId) {
+                        console.log('📌 Trying school from cookie:', cookieSchoolId);
+                        const { data: schoolFromCookie, error: cookieError } = await supabase
+                            .from('schools')
+                            .select('id, name')
+                            .eq('id', cookieSchoolId)
+                            .maybeSingle();
+                        
+                        if (schoolFromCookie && !cookieError) {
+                            school = schoolFromCookie;
+                            console.log('✅ School found from cookie:', school.name);
+                        }
+                    }
+                    
+                    // Fallback: try to find by user_id if cookie lookup failed
+                    if (!school) {
+                        console.log('🔍 Trying school from user_id...');
+                        const { data: schoolFromUser, error: userError } = await supabase
+                            .from('schools')
+                            .select('id, name')
+                            .eq('user_id', user.id)
+                            .maybeSingle();
+                        
+                        if (schoolFromUser && !userError) {
+                            school = schoolFromUser;
+                            console.log('✅ School found from user_id:', school.name);
+                        } else if (userError) {
+                            console.error('School query error:', userError);
+                        }
+                    }
+                    
+                    if (!school) {
+                        console.error('No school found for user');
+                        showMessage('School not found. Please complete your profile setup first.', 'error');
+                        hasError = true;
+                        errorMessage = 'School not found';
+                    } else {
+                        schoolId = school.id;
+                        console.log('✅ School loaded:', school.name);
+                        
+                        document.getElementById('schoolName').textContent = school.name;
+                        document.getElementById('adminPhone').textContent = ADMIN_PHONE;
+
+                        // Load verification status
+                        console.log('📋 Loading verification status...');
+                        try {
+                            await loadVerificationStatus();
+                        } catch (verifyError) {
+                            console.error('❌ Verification load error:', verifyError);
+                            hasError = true;
+                            errorMessage = 'Failed to load verification status';
+                            // Still continue to show UI
+                        }
+                    }
+                } catch (error) {
+                    console.error('❌ Initialization error:', error);
+                    hasError = true;
+                    errorMessage = 'Error: ' + (error.message || 'Failed to load');
+                    showMessage(errorMessage, 'error');
+                }
+
+                // Always show content after initialization attempt
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('verificationContent').style.display = 'block';
+
+                // Start auto-check for approval (every 5 seconds) only if we have a school ID
+                if (schoolId) {
+                    verificationCheckInterval = setInterval(() => {
+                        loadVerificationStatus().catch(err => {
+                            console.error('Auto-check error:', err);
+                        });
+                    }, 5000);
+                }
+                
+                console.log('✅ Verification page ready!');
+
+            } catch (error) {
+                console.error('❌ Fatal initialization error:', error);
+                // Ensure content is always shown
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('verificationContent').style.display = 'block';
+                showMessage('Error: ' + (error.message || 'Failed to load'), 'error');
+            }
+        }
+
+        async function loadVerificationStatus() {
+            try {
+                const supabase = await window.getSupabase();
+                console.log('   Querying school_verification table...');
+                const { data: verification, error } = await supabase
+                    .from('school_verification')
+                    .select('*')
+                    .eq('school_id', schoolId)
+                    .maybeSingle();
+
+                if (error) {
+                    console.log('   No record found, creating new one...');
+                    // Create verification record if not exists
+                    try {
+                        const { data: newVerification, error: createError } = await supabase
+                            .from('school_verification')
+                            .insert([{
+                                school_id: schoolId,
+                                user_id: currentUser.id,
+                                verification_status: 'pending'
+                            }])
+                            .select()
+                            .maybeSingle();
+
+                        if (createError) {
+                            console.error('❌ Create error:', createError.message);
+                            // If creation fails, just show pending status
+                            updateUI({
+                                school_id: schoolId,
+                                user_id: currentUser.id,
+                                verification_status: 'pending',
+                                created_at: new Date().toISOString()
+                            });
+                            return;
+                        }
+                        console.log('✅ Record created');
+                        updateUI(newVerification);
+                    } catch (createException) {
+                        console.error('❌ Create exception:', createException);
+                        // Fallback UI update
+                        updateUI({
+                            school_id: schoolId,
+                            user_id: currentUser.id,
+                            verification_status: 'pending',
+                            created_at: new Date().toISOString()
+                        });
+                    }
+                } else {
+                    console.log('✅ Record found, status:', verification?.verification_status);
+                    updateUI(verification);
+                }
+            } catch (error) {
+                console.error('❌ Error loading verification status:', error.message);
+                if (error.code) console.error('   Code:', error.code);
+                if (error.details) console.error('   Details:', error.details);
+                showMessage('Error: ' + (error.message || 'Failed to load verification status'), 'error');
+                // Still show a fallback UI
+                updateUI({
+                    school_id: schoolId,
+                    user_id: currentUser.id,
+                    verification_status: 'pending',
+                    created_at: new Date().toISOString()
+                });
+            }
+        }
+
+        function updateUI(verification) {
+            if (!verification) {
+                console.warn('updateUI called with null verification — using fallback pending state');
+                verification = {
+                    school_id: schoolId,
+                    user_id: currentUser?.id || null,
+                    verification_status: 'pending',
+                    created_at: new Date().toISOString()
+                };
+            }
+
+            const { verification_status, transaction_id, verified_at, admin_notes, created_at } = verification;
+
+            // Update status badge and sections
+            if (verification_status === 'pending') {
+                updateStatusBadge('pending', 'Pending Approval');
+                document.getElementById('pendingSection').style.display = 'block';
+                document.getElementById('approvedSection').style.display = 'none';
+                document.getElementById('rejectedSection').style.display = 'none';
+
+                // Show transaction ID if already submitted
+                if (transaction_id) {
+                    document.getElementById('transactionId').value = transaction_id;
+                    document.getElementById('transactionId').disabled = true;
+                    showMessage('Transaction ID received. Waiting for admin approval...', 'info');
+                    document.getElementById('submitBtn').disabled = true;
+                }
+            } else if (verification_status === 'approved') {
+                updateStatusBadge('approved', 'Verified ✓');
+                document.getElementById('pendingSection').style.display = 'none';
+                document.getElementById('approvedSection').style.display = 'block';
+                document.getElementById('rejectedSection').style.display = 'none';
+
+                // Clear auto-check interval
+                if (verificationCheckInterval) {
+                    clearInterval(verificationCheckInterval);
+                }
+
+                // Redirect to dashboard after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            } else if (verification_status === 'rejected') {
+                updateStatusBadge('rejected', 'Rejected');
+                document.getElementById('pendingSection').style.display = 'none';
+                document.getElementById('approvedSection').style.display = 'none';
+                document.getElementById('rejectedSection').style.display = 'block';
+
+                if (admin_notes) {
+                    document.getElementById('rejectionReason').textContent = admin_notes;
+                }
+
+                if (verificationCheckInterval) {
+                    clearInterval(verificationCheckInterval);
+                }
+            }
+
+            // Update school info
+            const statusText = verification_status.charAt(0).toUpperCase() + verification_status.slice(1);
+            document.getElementById('verificationStatus').textContent = statusText;
+
+            if (created_at) {
+                const date = new Date(created_at).toLocaleDateString();
+                document.getElementById('submittedDate').textContent = date;
+            }
+        }
+
+        function updateStatusBadge(status, text) {
+            const badge = document.getElementById('statusBadge');
+            badge.className = `status-badge ${status}`;
+            badge.textContent = text;
+        }
+
+        async function submitVerification() {
+            const transactionId = document.getElementById('transactionId').value.trim();
+
+            if (!transactionId) {
+                showMessage('Please enter your transaction ID', 'error');
+                return;
+            }
+
+            try {
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').textContent = 'Submitting...';
+
+                const supabase = await window.getSupabase();
+                // Try to update existing verification row and return the updated row
+                const { data, error } = await supabase
+                    .from('school_verification')
+                    .update({
+                        transaction_id: transactionId,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('school_id', schoolId)
+                    .select()
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                let verificationRow = data;
+
+                // If no row was updated (no verification exists), insert one
+                if (!verificationRow) {
+                    const { data: inserted, error: insertErr } = await supabase
+                        .from('school_verification')
+                        .insert([{
+                            school_id: schoolId,
+                            user_id: currentUser?.id || null,
+                            transaction_id: transactionId,
+                            verification_status: 'pending',
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        }])
+                        .select()
+                        .maybeSingle();
+
+                    if (insertErr) throw insertErr;
+                    verificationRow = inserted;
+                }
+
+                showMessage('Transaction ID submitted successfully! Waiting for admin approval...', 'success');
+                document.getElementById('transactionId').disabled = true;
+                document.getElementById('submitBtn').disabled = true;
+
+                // Refresh UI with the new/updated verification row
+                if (verificationRow) updateUI(verificationRow);
+                // Ensure background checker picks up the change
+                loadVerificationStatus().catch(() => {});
+
+            } catch (error) {
+                console.error('Error submitting transaction ID:', error);
+                showMessage('Error submitting transaction ID', 'error');
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('submitBtn').textContent = 'Submit Transaction ID';
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+        }
+
+        async function logout() {
+            try {
+                const supabase = await window.getSupabase();
+                await supabase.auth.signOut();
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // ========================================
+        // DEBUG FUNCTIONS
+        // ========================================
+
+        function toggleDebugPanel() {
+            const panel = document.getElementById('debugPanel');
+            panel.classList.toggle('show');
+        }
+
+        function addDebugOutput(message, isError = false) {
+            const output = document.getElementById('debugOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = isError ? '❌' : '✅';
+            const newLine = `[${timestamp}] ${prefix} ${message}\n`;
+            output.textContent += newLine;
+            
+            // Update styling
+            output.classList.remove('success');
+            if (isError) {
+                output.classList.add('error');
+            } else {
+                output.classList.add('success');
+            }
+            
+            // Auto-scroll to bottom
+            output.scrollTop = output.scrollHeight;
+            
+            console.log(message);
+        }
+
+        function clearDebugOutput() {
+            const output = document.getElementById('debugOutput');
+            output.textContent = 'Debug output cleared. Click "Test Connection" to start a new test...\n';
+            output.classList.remove('error', 'success');
+        }
+
+        async function testSupabaseConnection() {
+            clearDebugOutput();
+            addDebugOutput('Starting database connection test...');
+
+            try {
+                // Test 1: Check if Supabase library is available
+                addDebugOutput('Test 1: Checking Supabase library...');
+                if (!window.getSupabase) {
+                    throw new Error('window.getSupabase function not found');
+                }
+                addDebugOutput('✓ Supabase functions available');
+
+                // Test 2: Initialize Supabase
+                addDebugOutput('Test 2: Initializing Supabase...');
+                const testSupabase = await window.getSupabase();
+                if (!testSupabase) {
+                    throw new Error('Failed to get Supabase instance');
+                }
+                addDebugOutput('✓ Supabase initialized successfully');
+
+                // Test 3: Check authentication
+                addDebugOutput('Test 3: Checking authentication...');
+                const { data: { user }, error: authError } = await testSupabase.auth.getUser();
+                if (authError) {
+                    addDebugOutput(`Auth error: ${authError.message}`, true);
+                    throw authError;
+                }
+                if (!user) {
+                    addDebugOutput('No authenticated user found', true);
+                    throw new Error('No user authenticated');
+                }
+                addDebugOutput(`✓ User authenticated: ${user.email}`);
+
+                // Test 4: Query schools table
+                addDebugOutput('Test 4: Querying schools table...');
+                const { data: schoolData, error: schoolError } = await testSupabase
+                    .from('schools')
+                    .select('id, name')
+                    .eq('user_id', user.id)
+                    .maybeSingle();
+
+                if (schoolError) {
+                    addDebugOutput(`Schools query error: ${schoolError.message}`, true);
+                    addDebugOutput(`Error code: ${schoolError.code}`, true);
+                    addDebugOutput(`Error details: ${JSON.stringify(schoolError.details)}`, true);
+                    throw schoolError;
+                }
+                if (!schoolData) {
+                    addDebugOutput('No school found for user', true);
+                    throw new Error('No school associated with user');
+                }
+                addDebugOutput(`✓ School found: ${schoolData.name}`);
+
+                // Test 5: Query school_verification table
+                addDebugOutput('Test 5: Querying school_verification table...');
+                const { data: verData, error: verError } = await testSupabase
+                    .from('school_verification')
+                    .select('*')
+                    .eq('school_id', schoolData.id)
+                    .maybeSingle();
+
+                if (verError) {
+                    if (verError.code === 'PGRST116') {
+                        addDebugOutput('✓ No verification record yet (this is normal for new schools)');
+                    } else {
+                        addDebugOutput(`Verification query error: ${verError.message}`, true);
+                        addDebugOutput(`Error code: ${verError.code}`, true);
+                        addDebugOutput(`Error details: ${JSON.stringify(verError.details)}`, true);
+                        throw verError;
+                    }
+                } else {
+                    addDebugOutput(`✓ Verification record found`);
+                    addDebugOutput(`  Status: ${verData?.verification_status || 'pending'}`);
+                }
+
+                // All tests passed
+                addDebugOutput('');
+                addDebugOutput('✅ ALL TESTS PASSED - Database connection is working!');
+
+            } catch (error) {
+                addDebugOutput('');
+                addDebugOutput(`❌ TEST FAILED: ${error.message}`, true);
+                addDebugOutput(`Error type: ${error.name}`, true);
+                if (error.code) addDebugOutput(`Error code: ${error.code}`, true);
+                if (error.details) addDebugOutput(`Details: ${JSON.stringify(error.details)}`, true);
+                if (error.hint) addDebugOutput(`Hint: ${error.hint}`, true);
+                
+                addDebugOutput('');
+                addDebugOutput('Troubleshooting steps:', true);
+                addDebugOutput('1. Check your Supabase project URL and API key', true);
+                addDebugOutput('2. Verify RLS policies are configured correctly', true);
+                addDebugOutput('3. Check browser console for more detailed error messages', true);
+                addDebugOutput('4. Make sure your schools table exists', true);
+                addDebugOutput('5. Make sure your school_verification table exists', true);
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', init);
+
+        // Cleanup interval on page unload
+        window.addEventListener('beforeunload', () => {
+            if (verificationCheckInterval) {
+                clearInterval(verificationCheckInterval);
+            }
+        });
+    </script>
+</body>
+</html>

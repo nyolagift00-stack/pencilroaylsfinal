@@ -1,0 +1,27 @@
+import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2').then(async (module) => {
+  const { createClient } = module;
+  
+  const SUPABASE_URL = 'https://tjooofnjwwtgageayezr.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqb29vZm5qd3d0Z2FnZWF5ZXpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NTI1NDIsImV4cCI6MjA4NjAyODU0Mn0.Pg8ldP8qI6e70WNGNzdnAbMmgAlL1rb6w41sGjXFc9Y';
+  
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  
+  try {
+    // Create schools table
+    await supabase.rpc('exec_sql', {
+      sql: `CREATE TABLE IF NOT EXISTS schools (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+        name TEXT NOT NULL,
+        location TEXT,
+        approved BOOLEAN DEFAULT false,
+        created_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(user_id)
+      );`
+    });
+    
+    console.log('✅ Tables created successfully!');
+  } catch (error) {
+    console.error('❌ Error:', error.message);
+  }
+});

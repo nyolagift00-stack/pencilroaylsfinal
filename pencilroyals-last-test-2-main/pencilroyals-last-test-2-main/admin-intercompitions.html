@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Edit Competition - Pencil Royal</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .admin-comp-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .comp-header {
+      background: linear-gradient(135deg, #1a3c5e 0%, #0d1f2d 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .comp-header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .back-btn {
+      padding: 10px 20px;
+      background: white;
+      color: #1a3c5e;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .back-btn:hover {
+      background: #f0f4f8;
+    }
+    .category-section {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-top: 3px solid #d4af37;
+    }
+    .category-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a3c5e;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #d4af37;
+      padding-bottom: 10px;
+    }
+    .students-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .students-table thead {
+      background: #1a3c5e;
+      color: white;
+    }
+    .students-table th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .students-table td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    .students-table tbody tr:hover {
+      background: #f0f4f8;
+    }
+    .score-input {
+      width: 100px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .finalist-badge {
+      background: #d4af37;
+      color: #333;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .finalist-section {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 6px;
+      border: 2px solid #d4af37;
+      margin-top: 15px;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+      justify-content: center;
+    }
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .btn.primary {
+      background: #1a3c5e;
+      color: white;
+    }
+    .btn.primary:hover {
+      background: #0d1f2d;
+    }
+    .btn.secondary {
+      background: #999;
+      color: white;
+    }
+    .btn.secondary:hover {
+      background: #777;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="logo">Pencil Royal</div>
+      <button class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="navMenu" class="nav-menu">
+        <a href="admin-panel.html">← Back to Admin Panel</a>
+        <button id="logoutBtn" class="btn outline">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-comp-container">
+    <div class="comp-header">
+      <div>
+        <h1 id="schoolTitle">Loading...</h1>
+        <p style="margin: 10px 0 0 0; opacity: 0.9;">Edit competition scores and select finalists</p>
+      </div>
+      <button class="back-btn" onclick="window.location.href='admin-panel.html'">← Back</button>
+    </div>
+
+    <!-- Competition Selector -->
+    <div class="category-section" style="border-top-color: #1a3c5e; background: #f5f9fc;">
+      <h3 style="margin: 0 0 15px 0; color: #1a3c5e;">📋 Select Competition</h3>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <select id="competitionSelect" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; min-width: 300px;">
+          <option value="">-- Create or Select Competition --</option>
+        </select>
+        <input type="text" id="competitionNameInput" placeholder="New competition name (optional)" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; flex: 1; min-width: 200px;">
+        <button onclick="createOrSelectCompetition()" style="padding: 8px 16px; background: #1a3c5e; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+          🔄 Load
+        </button>
+      </div>
+      <p id="competitionStatus" style="margin: 10px 0 0 0; font-size: 12px; color: #666; display: none;"></p>
+    </div>
+
+    <!-- Boys Section -->
+    <div class="category-section">
+      <div class="category-title">Boys - Give Marks & Select Finalist</div>
+      <table class="students-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Year</th>
+            <th>Marks (Out of 100)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="boysList"></tbody>
+      </table>
+      <div class="finalist-section" style="display: none;" id="boysFinal">
+        <h4 style="margin: 0 0 10px 0; color: #333;">Selected for Nationals</h4>
+        <div id="boysFinalistDisplay"></div>
+      </div>
+    </div>
+
+    <!-- Girls Section -->
+    <div class="category-section">
+      <div class="category-title">Girls - Give Marks & Select Finalist</div>
+      <table class="students-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Year</th>
+            <th>Marks (Out of 100)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="girlsList"></tbody>
+      </table>
+      <div class="finalist-section" style="display: none;" id="girlsFinal">
+        <h4 style="margin: 0 0 10px 0; color: #333;">Selected for Nationals</h4>
+        <div id="girlsFinalistDisplay"></div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn primary" onclick="saveAll()">Save All Changes</button>
+      <button class="btn secondary" onclick="resetAll()">Reset All</button>
+    </div>
+
+    <!-- Verification Report Panel -->
+    <div id="verificationReport" style="display: none; margin-top: 30px; padding: 20px; background: #f0f9ff; border-left: 4px solid #27ae60; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h3 style="margin: 0 0 15px 0; color: #27ae60; display: flex; align-items: center;">
+        <span style="font-size: 24px; margin-right: 10px;">✅</span>
+        Data Verification Report
+      </h3>
+      <div id="verificationContent" style="color: #333; line-height: 1.8; font-size: 14px;"></div>
+      <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 4px; border-left: 3px solid #27ae60;">
+        <strong>🔍 Console Logs:</strong> Open browser DevTools (F12) → Console tab to see detailed database verification logs
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>
+    let schoolId = null;
+    let schoolName = null;
+    let competitionId = null;
+    let students = { boys: [], girls: [] };
+    let scores = {};
+
+    async function init() {
+      try {
+        console.log('🔄 Initializing admin-intercompitions page...');
+        
+        // Check authentication
+        const user = await getCurrentUser();
+        if (!user) {
+          console.error('No user logged in');
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        console.log('✓ User authenticated:', user.email);
+
+        // Check if user is admin using the new role-based system
+        const isAdmin = await isUserAdmin(user.id);
+        console.log('✓ Admin check completed:', isAdmin);
+
+        if (!isAdmin) {
+          console.warn('User is not an admin');
+          document.querySelector('main').innerHTML = `
+            <div style="max-width: 600px; margin: 50px auto; padding: 30px; background: #ffe6e6; border-radius: 8px; border-left: 4px solid #dc3545;">
+              <h2 style="color: #dc3545; margin: 0 0 15px 0;">❌ Access Denied</h2>
+              <p style="color: #666;">You don't have permission to edit competitions.</p>
+              <button onclick="logout()" style="margin-top: 20px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+            </div>
+          `;
+          return;
+        }
+
+        // Get school from URL
+        const params = new URLSearchParams(window.location.search);
+        schoolId = params.get('school');
+        schoolName = decodeURIComponent(params.get('name'));
+
+        console.log('📍 School ID:', schoolId);
+        console.log('📍 School Name:', schoolName);
+
+        if (!schoolId) {
+          console.error('School ID not in URL');
+          showAlert('error', 'School ID not provided');
+          setTimeout(() => window.location.href = 'admin-panel.html', 1500);
+          return;
+        }
+
+        console.log('✅ Admin editing school:', schoolName);
+        document.getElementById('schoolTitle').textContent = `✏️ ${schoolName}`;
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+
+        console.log('⏳ Loading school students and competitions...');
+        await loadSchoolStudents();
+        console.log('✅ Page loaded successfully');
+      } catch (err) {
+        console.error('❌ Init error:', err);
+        console.error('Error stack:', err.stack);
+        showAlert('error', 'Error loading: ' + err.message);
+      }
+    }
+
+    async function loadCompetitions() {
+      try {
+        console.log('Loading competitions for school:', schoolId);
+        const sb = await getSupabase();
+
+        // Load competitions for this school
+        const { data, error } = await sb
+          .from('competitions')
+          .select('id, name, status')
+          .eq('school_id', schoolId)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        const select = document.getElementById('competitionSelect');
+        select.innerHTML = '<option value="">-- Create or Select Competition --</option>';
+
+        if (data && data.length > 0) {
+          data.forEach(comp => {
+            const option = document.createElement('option');
+            option.value = comp.id;
+            option.textContent = `${comp.name} (${comp.status})`;
+            select.appendChild(option);
+          });
+          console.log('✓ Loaded', data.length, 'competitions');
+        } else {
+          console.log('No competitions found, will create new one');
+        }
+
+        // Auto-select first competition if available
+        if (data && data.length > 0) {
+          select.value = data[0].id;
+          competitionId = data[0].id;
+          updateCompetitionStatus();
+        }
+      } catch (err) {
+        console.error('Error loading competitions:', err);
+        showAlert('error', 'Error loading competitions: ' + err.message);
+      }
+    }
+
+    async function createOrSelectCompetition() {
+      try {
+        const select = document.getElementById('competitionSelect');
+        const compNameInput = document.getElementById('competitionNameInput');
+        
+        if (select.value) {
+          // Use selected competition
+          competitionId = select.value;
+          updateCompetitionStatus();
+          return;
+        }
+
+        // Create new competition
+        const compName = compNameInput.value.trim() || `${schoolName} - ${new Date().toLocaleDateString()}`;
+        
+        showLoader();
+        const sb = await getSupabase();
+
+        const { data, error } = await sb
+          .from('competitions')
+          .insert({
+            school_id: schoolId,
+            name: compName,
+            type: 'internal',
+            status: 'active'
+          })
+          .select()
+          .single();
+
+        hideLoader();
+
+        if (error) throw error;
+
+        competitionId = data.id;
+        console.log('✅ Created new competition:', compName);
+        
+        // Reload competitions and select the new one
+        await loadCompetitions();
+        select.value = competitionId;
+        updateCompetitionStatus();
+        compNameInput.value = '';
+        showAlert('success', `✓ Competition created: ${compName}`);
+      } catch (err) {
+        hideLoader();
+        console.error('Error:', err);
+        showAlert('error', 'Error: ' + (err.message || JSON.stringify(err)));
+      }
+    }
+
+    function updateCompetitionStatus() {
+      const select = document.getElementById('competitionSelect');
+      const statusEl = document.getElementById('competitionStatus');
+      
+      if (competitionId && select.value) {
+        const selectedOption = select.options[select.selectedIndex];
+        statusEl.textContent = `✓ Using: ${selectedOption.text}`;
+        statusEl.style.display = 'block';
+        statusEl.style.color = '#27ae60';
+        statusEl.style.fontWeight = 'bold';
+      } else {
+        statusEl.style.display = 'none';
+      }
+    }
+
+    async function loadSchoolStudents() {
+      try {
+        showLoader();
+        const sb = await getSupabase();
+
+        // Load competitions first
+        await loadCompetitions();
+
+        // Load students for this school
+        const { data, error } = await sb
+          .from('students')
+          .select('*')
+          .eq('school_id', schoolId);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          hideLoader();
+          showAlert('info', 'No students registered for this school');
+          students = { boys: [], girls: [] };
+          renderStudents();
+          return;
+        }
+
+        // Filter by gender
+        students.boys = data.filter(s => {
+          const g = (s.gender || '').toLowerCase();
+          return g === 'boy' || g === 'male';
+        });
+        students.girls = data.filter(s => {
+          const g = (s.gender || '').toLowerCase();
+          return g === 'girl' || g === 'female';
+        });
+
+        // Load existing scores if competition is selected
+        if (competitionId) {
+          const { data: scoreData } = await sb
+            .from('competition_scores')
+            .select('student_id, score')
+            .eq('competition_id', competitionId)
+            .eq('school_id', schoolId);
+
+          if (scoreData) {
+            scoreData.forEach(s => {
+              scores[s.student_id] = s.score;
+            });
+          }
+        }
+
+        hideLoader();
+        renderStudents();
+      } catch (err) {
+        hideLoader();
+        console.error('Error:', err);
+        showAlert('error', 'Failed to load students: ' + err.message);
+      }
+    }
+
+    function renderStudents() {
+      renderCategory('boys');
+      renderCategory('girls');
+      updateFinalistDisplay();
+    }
+
+    function renderCategory(gender) {
+      const tbody = document.getElementById(gender + 'List');
+      const categoryStudents = students[gender];
+
+      if (categoryStudents.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #666;">No ${gender} registered</td></tr>`;
+        return;
+      }
+
+      // Sort by score
+      const sorted = [...categoryStudents].sort((a, b) => (scores[b.id] || 0) - (scores[a.id] || 0));
+
+      tbody.innerHTML = sorted.map((student, idx) => `
+        <tr>
+          <td style="font-weight: 600; color: #1a3c5e;">${idx + 1}</td>
+          <td>${student.name}</td>
+          <td>${student.year_of_study || '-'}</td>
+          <td>
+            <input 
+              type="number" 
+              class="score-input" 
+              min="0" 
+              max="100" 
+              value="${scores[student.id] || ''}"
+              onchange="updateScore('${student.id}', '${gender}')"
+              placeholder="Score"
+            >
+          </td>
+          <td>
+            <button 
+              onclick="setAsFinalist('${student.id}', '${gender}')"
+              style="padding: 4px 8px; background: ${getFinalistStatus(student.id) === student.id ? '#d4af37' : '#1a3c5e'}; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;"
+            >
+              ${getFinalistStatus(student.id) === student.id ? '★ SELECTED' : '☆ Select'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function updateScore(studentId, gender) {
+      const input = event.target;
+      const score = parseInt(input.value) || 0;
+
+      if (score < 0 || score > 100) {
+        showAlert('error', 'Marks must be 0-100');
+        input.value = scores[studentId] || '';
+        return;
+      }
+
+      scores[studentId] = score;
+      renderCategory(gender);
+      updateFinalistDisplay();
+    }
+
+    let finalists = { boy: null, girl: null };
+
+    function setAsFinalist(studentId, gender) {
+      const gender_key = gender === 'boys' ? 'boy' : 'girl';
+      finalists[gender_key] = finalists[gender_key] === studentId ? null : studentId;
+      renderCategory(gender);
+      updateFinalistDisplay();
+    }
+
+    function getFinalistStatus(studentId) {
+      if (finalists.boy === studentId) return studentId;
+      if (finalists.girl === studentId) return studentId;
+      return null;
+    }
+
+    function updateFinalistDisplay() {
+      // Update boys
+      if (finalists.boy) {
+        const boy = students.boys.find(s => s.id === finalists.boy);
+        if (boy) {
+          document.getElementById('boysFinalistDisplay').innerHTML = `
+            <div style="padding: 10px; background: white; border-radius: 4px; border-left: 4px solid #d4af37;">
+              <strong style="color: #1a3c5e;">${boy.name}</strong>
+              <div style="font-size: 12px; color: #666;">Score: ${scores[boy.id] || 0}/100</div>
+            </div>
+          `;
+          document.getElementById('boysFinal').style.display = 'block';
+        }
+      } else {
+        document.getElementById('boysFinal').style.display = 'none';
+      }
+
+      // Update girls
+      if (finalists.girl) {
+        const girl = students.girls.find(s => s.id === finalists.girl);
+        if (girl) {
+          document.getElementById('girlsFinalistDisplay').innerHTML = `
+            <div style="padding: 10px; background: white; border-radius: 4px; border-left: 4px solid #d4af37;">
+              <strong style="color: #1a3c5e;">${girl.name}</strong>
+              <div style="font-size: 12px; color: #666;">Score: ${scores[girl.id] || 0}/100</div>
+            </div>
+          `;
+          document.getElementById('girlsFinal').style.display = 'block';
+        }
+      } else {
+        document.getElementById('girlsFinal').style.display = 'none';
+      }
+    }
+
+    async function setSavedState() {
+      // Disable inputs and change Save button to Edit
+      document.querySelectorAll('.score-input').forEach(i => i.setAttribute('disabled','disabled'));
+      document.querySelectorAll('.score-input').forEach(i => i.style.opacity = '0.7');
+      
+      // Add saved timestamp
+      const now = new Date();
+      const savedTime = now.toLocaleTimeString();
+      const savedDate = now.toLocaleDateString();
+      
+      // Change primary button
+      const saveBtn = document.querySelector('.btn.primary');
+      if (saveBtn) {
+        saveBtn.innerHTML = `✅ SAVED<br><small style="font-size: 11px;">${savedTime}</small>`;
+        saveBtn.classList.remove('primary');
+        saveBtn.classList.add('secondary');
+        saveBtn.style.cursor = 'default';
+        saveBtn.style.background = '#27ae60';
+        saveBtn.style.color = 'white';
+        saveBtn.onclick = () => {
+          // Re-enable editing
+          document.querySelectorAll('.score-input').forEach(i => { i.removeAttribute('disabled'); i.style.opacity = '1'; });
+          saveBtn.innerHTML = '💾 Save All Changes';
+          saveBtn.classList.remove('secondary');
+          saveBtn.classList.add('primary');
+          saveBtn.style.cursor = 'pointer';
+          saveBtn.style.background = '';
+          saveBtn.style.color = '';
+          saveBtn.onclick = saveAll;
+        };
+      }
+      
+      // Add visual confirmation panel
+      const header = document.querySelector('.comp-header');
+      if (header && !document.getElementById('savedConfirmation')) {
+        const confirmPanel = document.createElement('div');
+        confirmPanel.id = 'savedConfirmation';
+        confirmPanel.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #27ae60;
+          color: white;
+          padding: 15px 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          z-index: 1000;
+          font-weight: 600;
+          animation: slideIn 0.3s ease;
+        `;
+        confirmPanel.innerHTML = `
+          ✅ All Changes Saved & Verified
+          <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">
+            Saved: ${savedDate} ${savedTime}
+            <br>Status: LIVE & STORED PERMANENTLY
+          </div>
+        `;
+        document.body.appendChild(confirmPanel);
+        
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+          }
+        `;
+        document.head.appendChild(style);
+        
+        // Auto-remove after 8 seconds
+        setTimeout(() => {
+          confirmPanel.style.animation = 'slideOut 0.3s ease forwards';
+          setTimeout(() => confirmPanel.remove(), 300);
+        }, 8000);
+      }
+    }
+
+    async function saveAll() {
+      // Check if competition is selected
+      if (!competitionId) {
+        showAlert('error', '❌ Please select or create a competition first!');
+        return;
+      }
+
+      // Provide clear UI feedback without locking the page
+      const saveBtn = document.querySelector('.btn.primary');
+      if (saveBtn) { saveBtn.setAttribute('disabled','disabled'); }
+      showLoader();
+      try {
+        const sb = await getSupabase();
+
+        console.log('🔄 Starting save process for school:', schoolId, 'competition:', competitionId);
+
+        // Save scores
+        const scoresData = Object.entries(scores).map(([studentId, score]) => ({
+          competition_id: competitionId,
+          student_id: studentId,
+          school_id: schoolId,
+          score: score,
+          gender: students.boys.find(s => s.id === studentId) ? 'male' : 'female'
+        }));
+
+        console.log('📝 Scores to save:', scoresData.length, 'records');
+
+        // Delete old scores for this competition then insert new ones
+        const delScores = await sb.from('competition_scores').delete().eq('competition_id', competitionId).eq('school_id', schoolId);
+        if (delScores.error) throw delScores.error;
+        console.log('🗑️ Old scores deleted');
+
+        let savedScoresCount = 0;
+        if (scoresData.length > 0) {
+          const insScores = await sb.from('competition_scores').insert(scoresData).select();
+          if (insScores.error) throw insScores.error;
+          savedScoresCount = insScores.data?.length || 0;
+          console.log('✅ Inserted scores:', insScores.data);
+        }
+
+        // Save finalists
+        const delFinals = await sb.from('finalists').delete().eq('competition_id', competitionId).eq('school_id', schoolId);
+        if (delFinals.error) throw delFinals.error;
+        console.log('🗑️ Old finalists deleted');
+
+        const finalistsData = [];
+        if (finalists.boy) {
+          const boyStudent = students.boys.find(s => s.id === finalists.boy);
+          finalistsData.push({ 
+            competition_id: competitionId, 
+            school_id: schoolId, 
+            student_id: finalists.boy,
+            gender: 'male',
+            score: scores[finalists.boy] || 0
+          });
+        }
+        if (finalists.girl) {
+          const girlStudent = students.girls.find(s => s.id === finalists.girl);
+          finalistsData.push({ 
+            competition_id: competitionId, 
+            school_id: schoolId, 
+            student_id: finalists.girl,
+            gender: 'female',
+            score: scores[finalists.girl] || 0
+          });
+        }
+
+        let savedFinalistsCount = 0;
+        if (finalistsData.length > 0) {
+          const insFinals = await sb.from('finalists').insert(finalistsData).select();
+          if (insFinals.error) throw insFinals.error;
+          savedFinalistsCount = insFinals.data?.length || 0;
+          console.log('✅ Inserted finalists:', insFinals.data);
+        }
+
+        // ========================================
+        // DATABASE VERIFICATION - Check saved data
+        // ========================================
+        console.log('🔍 Verifying saved data...');
+        
+        // Verify scores were saved
+        const { data: verifyScores, error: scoreError } = await sb
+          .from('competition_scores')
+          .select('id, student_id, score')
+          .eq('competition_id', competitionId)
+          .eq('school_id', schoolId);
+        
+        if (scoreError) throw scoreError;
+        console.log('✓ Verified scores in database:', verifyScores?.length || 0, 'records');
+
+        // Verify finalists were saved
+        const { data: verifyFinalists, error: finError } = await sb
+          .from('finalists')
+          .select('id, student_id, gender, score')
+          .eq('competition_id', competitionId)
+          .eq('school_id', schoolId);
+        
+        if (finError) throw finError;
+        console.log('✓ Verified finalists in database:', verifyFinalists?.length || 0, 'records');
+
+        // Get school details
+        const { data: schoolData, error: schoolError } = await sb
+          .from('schools')
+          .select('id, name, approved')
+          .eq('id', schoolId)
+          .single();
+        
+        if (schoolError) throw schoolError;
+        console.log('✓ School details:', schoolData);
+
+        // Update school status to "live" (mark as approved if pending)
+        if (schoolData && !schoolData.approved) {
+          console.log('🔄 Updating school approval status to true...');
+          const { data: updateData, error: updateError } = await sb
+            .from('schools')
+            .update({ approved: true, updated_at: new Date().toISOString() })
+            .eq('id', schoolId)
+            .select();
+          
+          if (updateError) {
+            console.error('❌ ERROR updating school status:', updateError);
+            throw updateError;
+          }
+          console.log('✅ School status updated to LIVE (Approved)', updateData);
+        } else {
+          console.log('✓ School already approved:', schoolData?.approved);
+        }
+
+        // Update competition status from pending to active for nationals
+        const { error: compUpdateError } = await sb
+          .from('competitions')
+          .update({ status: 'active', updated_at: new Date().toISOString() })
+          .eq('id', competitionId);
+        
+        if (compUpdateError) throw compUpdateError;
+        console.log('✅ Competition status updated to Active for Nationals');
+
+        // ========================================
+        // SAVE SUCCESSFUL - Show detailed feedback
+        // ========================================
+        console.log('════════════════════════════════════════');
+        console.log('✅ ALL DATA SAVED & VERIFIED SUCCESSFULLY');
+        console.log('════════════════════════════════════════');
+        console.log('School:', schoolData?.name);
+        console.log('Scores saved & verified:', savedScoresCount);
+        console.log('Finalists saved & verified:', savedFinalistsCount);
+        console.log('Status: LIVE & STORED PERMANENTLY');
+        console.log('════════════════════════════════════════');
+
+        hideLoader();
+        
+        // Show success alert with details
+        const successMsg = `
+          ✅ SAVED SUCCESSFULLY
+          
+📊 Scores: ${savedScoresCount} records saved
+👥 Finalists: ${savedFinalistsCount} selected
+🎯 School Status: LIVE (Active)
+🏆 Competition Status: Active for Nationals
+          
+✓ All data verified in database
+✓ Changes stored permanently
+        `.trim();
+        
+        showAlert('success', successMsg);
+        
+        // Update verification report panel
+        const verificationReport = document.getElementById('verificationReport');
+        const verificationContent = document.getElementById('verificationContent');
+        if (verificationReport && verificationContent) {
+          const now = new Date();
+          const savedTime = now.toLocaleTimeString();
+          const savedDate = now.toLocaleDateString();
+          
+          verificationContent.innerHTML = `
+            <div style="font-size: 15px;">
+              <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 4px;">
+                <strong style="color: #27ae60;">✓ Save Timestamp:</strong><br>
+                ${savedDate} at ${savedTime}
+              </div>
+              
+              <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 4px;">
+                <strong style="color: #27ae60;">✓ School:</strong><br>
+                ${schoolData?.name || 'Unknown'}
+              </div>
+              
+              <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 4px;">
+                <strong style="color: #27ae60;">📊 Scores:</strong><br>
+                <span style="font-size: 16px; color: #27ae60; font-weight: bold;">${savedScoresCount}</span> records saved & verified in database
+              </div>
+              
+              <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 4px;">
+                <strong style="color: #27ae60;">👥 Finalists:</strong><br>
+                <span style="font-size: 16px; color: #27ae60; font-weight: bold;">${savedFinalistsCount}</span> selected for nationals & verified in database
+              </div>
+              
+              <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 4px;">
+                <strong style="color: #27ae60;">🎯 School Status:</strong><br>
+                <span style="font-size: 14px; font-weight: bold; color: #27ae60;">LIVE (Active & Approved)</span>
+              </div>
+              
+              <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 4px;">
+                <strong style="color: #27ae60;">🏆 Competition Status:</strong><br>
+                <span style="font-size: 14px; font-weight: bold; color: #27ae60;">Active for Nationals</span>
+              </div>
+              
+              <div style="padding: 10px; background: white; border-radius: 4px; border-left: 3px solid #27ae60;">
+                <strong style="color: #27ae60;">✓ Database Verification:</strong><br>
+                ✓ Scores table: ${verifyScores?.length || 0} records confirmed<br>
+                ✓ Finalists table: ${verifyFinalists?.length || 0} records confirmed<br>
+                ✓ Schools table: Status updated to LIVE<br>
+                ✓ Competitions table: Status updated to Active for Nationals<br>
+                <br>
+                <strong style="color: #27ae60;">✓ Data Status: STORED PERMANENTLY</strong>
+              </div>
+            </div>
+          `;
+          
+          verificationReport.style.display = 'block';
+          // Scroll to report
+          setTimeout(() => verificationReport.scrollIntoView({ behavior: 'smooth' }), 300);
+        }
+        
+        await setSavedState();
+
+        // Reload competitions to show updated status
+        await loadCompetitions();
+        // Re-select the current competition to show updated status
+        const select = document.getElementById('competitionSelect');
+        if (competitionId) {
+          select.value = competitionId;
+          updateCompetitionStatus();
+        }
+
+        // Attempt to update opener (schools list) if present
+        try {
+          if (window.opener && !window.opener.closed) {
+            try {
+              const opHref = window.opener.location.href || '';
+              if (opHref.indexOf('schools.html') !== -1 || opHref.indexOf('admin') !== -1) {
+                window.opener.location.reload();
+              } else {
+                window.opener.location.reload();
+              }
+            } catch (e) {
+              console.warn('Could not access opener to refresh:', e);
+            }
+          }
+        } catch (e) { console.warn('Opener check failed:', e); }
+
+        if (saveBtn) { saveBtn.removeAttribute('disabled'); }
+      } catch (err) {
+        hideLoader();
+        if (saveBtn) { saveBtn.removeAttribute('disabled'); }
+        console.error('❌ ERROR SAVING DATA:', err);
+        console.error('Full error object:', JSON.stringify(err, null, 2));
+        showAlert('error', '❌ Error saving: ' + (err.message || JSON.stringify(err)));
+      }
+    }
+
+    function resetAll() {
+      if (confirm('Reset all scores? This cannot be undone.')) {
+        scores = {};
+        finalists = { boy: null, girl: null };
+        renderStudents();
+        showAlert('success', 'All scores reset');
+      }
+    }
+
+    window.addEventListener('load', init);
+
+    // Hamburger Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', function() {
+        hamburgerBtn.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+
+      // Close menu when a link is clicked
+      const navLinks = navMenu.querySelectorAll('a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const isClickInsideMenu = navMenu.contains(event.target);
+        const isClickOnHamburger = hamburgerBtn.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnHamburger && navMenu.classList.contains('active')) {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

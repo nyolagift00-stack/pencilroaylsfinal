@@ -1,0 +1,7 @@
+/* Admin panel styles */
+.admin-header { background: #0d2545; color: white; padding: 20px; text-align: center; }
+.admin-nav a { color: #1a3c5e; margin: 0 10px; text-decoration: none; }
+.admin-nav a.active { font-weight: bold; }
+.admin-card { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.admin-card h3 { color: #1a3c5e; font-size: 1.5rem; margin-bottom: 10px; }
+.admin-card p { font-size: 2rem; font-weight: bold; color: #2654a0; }

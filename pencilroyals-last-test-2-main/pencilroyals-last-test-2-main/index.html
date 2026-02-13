@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pencil Royals | Official Website</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <style>
+    /* Finalists section background and overlay */
+    .finalists-section {
+      position: relative;
+      background-image: url('assets/img/finalists-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 50px 0;
+    }
+    .finalists-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      pointer-events: none;
+    }
+    .finalists-section .container {
+      position: relative;
+      z-index: 2;
+    }
+    .finalists-section .section-description,
+    .finalists-section .loading-text,
+    .finalists-section .finalists-grid p {
+      color: rgba(255,255,255,0.95);
+    }
+    .finalists-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .finalist-card {
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <img src="assets/img/Adobe Express - file.jpg" alt="Pencil Royals Logo" class="logo-img">
+        <img src="assets/img/logo.jpg" alt="Pencil Royals Seal" class="logo-img">
+      </div>
+      <button class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="navMenu" class="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="competition/overview.html">Competition rules</a>
+        <a href="schools.html">Schools</a>
+        <a href="results.html">Results</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html" class="btn primary">Register School</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Custom Hero Banner Section -->
+    <section class="hero-banner-section">
+      <div id="heroBannerContainer" class="hero-banner-wrapper">
+        <div class="hero-default">
+          <h1>Kings & Queens or Art</h1>
+          <p>National school competition where students lead, compete and shine.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Organization Logo and Info Section -->
+    <section class="org-section">
+      <div class="container">
+        <div class="org-content-wrapper">
+          <div class="org-content-left">
+            <div class="org-logo-container" id="orgLogoContainer" style="display: none;"></div>
+            <div class="org-info-container">
+              <h2 id="orgTitle">Welcome to Our Competition</h2>
+              <p id="orgAbout" class="org-description">National school competition where students lead, compete and shine.</p>
+              <div id="missionContainer" style="display: none;">
+                <h3>Our Mission</h3>
+                <p id="orgMission" class="org-mission"></p>
+              </div>
+              <div class="org-actions">
+                <a href="signup.html" class="btn primary">Register Your School</a>
+                <a href="manage-assets.html" class="btn outline" id="manageAssetsBtn" style="display: none;">Manage Assets</a>
+              </div>
+            </div>
+          </div>
+          <div class="org-illustration-container" id="orgIllustrationContainer">
+            <div class="org-illustration-placeholder fullscreen-trigger" onclick="openCalendarFullscreen()">
+              <img src="assets/img/Pencil Royals calendar_page-0001.jpg" alt="Pencil Royals Calendar" style="max-width: 100%; height: auto; border-radius: 12px; cursor: pointer;">
+              <p class="fullscreen-hint">Click to view full screen</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Illustrations Gallery Section -->
+    <section class="illustrations-section" id="illustrationsSection" style="display: none;">
+      <div class="container">
+        <h2 style="text-align: center; margin-bottom: 25px;">Our Program Highlights</h2>
+        <div id="illustrationsGrid" style="display: flex; flex-direction: column; gap: 30px;"></div>
+      </div>
+    </section>
+
+    <section class="hero">
+      <div class="container">
+        <h1>Kings & Queens or Art</h1>
+        <p>National school competition where students lead, compete and shine.</p>
+        <div class="hero-buttons">
+          <a href="signup.html" class="btn primary">Register Your School</a>
+          <a href="competition/overview.html" class="btn outline">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PNG Illustration Space 1 -->
+    <section class="illustration-space section-space">
+      <div class="container">
+        <div class="content-flex-row">
+          <div class="content-col-image">
+            <div class="illustration-placeholder" id="pngIllustration1">
+              <img src="assets/illustrations/undraw_art-museum_pqfw.png" alt="Art & Creative Expression">
+            </div>
+          </div>
+          <div class="content-col-text">
+            <h3 class="heading-featured">Art & Creative Expression</h3>
+            <p class="text-regular">
+              Pencil Royals celebrates artistic creativity as a cornerstone of modern leadership. Through our platform, students explore visual arts, design thinking, and creative problem-solving that transcends traditional boundaries.
+            </p>
+            <ul class="text-features-list">
+              <li>Creative design challenges</li>
+              <li>Digital and traditional art forms</li>
+              <li>Innovation through artistic expression</li>
+              <li>National art recognition platform</li>
+            </ul>
+            <a href="competition/overview.html" class="content-link">Discover Art Competitions →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <h2>Top 10 Students Nationwide</h2>
+        <div id="topStudentsContainer" class="section-content">
+          <p class="loading-text">Loading...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PNG Illustration Space 2 -->
+    <section class="illustration-space section-space">
+      <div class="container">
+        <div class="content-flex-row">
+          <div class="content-col-image">
+            <div class="illustration-placeholder" id="pngIllustration2">
+              <img src="assets/illustrations/undraw_artist-at-work_yos7.png" alt="Student Development">
+            </div>
+          </div>
+          <div class="content-col-text">
+            <h3 class="heading-featured">National Excellence Program</h3>
+            <p class="text-regular">
+              Our comprehensive competition framework showcases the best leadership talent from schools across the nation. Students engage in rigorous challenges that test their innovation, strategic thinking, and collaborative abilities.
+            </p>
+            <ul class="text-features-list">
+              <li>Multi-round elimination process</li>
+              <li>Expert judges and mentors</li>
+              <li>Nationwide recognition and awards</li>
+              <li>Career development opportunities</li>
+            </ul>
+            <a href="competition/overview.html" class="content-link">Explore the Program →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOP SPONSORS SECTION -->
+    <section class="features sponsors-section">
+      <div class="container">
+        <h2 class="sponsors-title"><i class="fas fa-handshake"></i>Our Partners & Sponsors</h2>
+        <div id="topSponsorsDisplay" class="sponsors-grid">
+          <p class="sponsors-loading">Loading sponsors...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="features features-alt finalists-section">
+      <div class="container">
+        <h2><i class="fas fa-trophy" style="margin-right: 10px;"></i>National Competition Finalists</h2>
+        <p class="section-description">One boy and one girl from each school competing nationally.</p>
+        <div id="finalistsContainer" class="finalists-grid">
+          <p class="loading-text">Loading...</p>
+        </div>
+        <!-- Sponsors strip inside finalists section -->
+        <div id="finalistsSponsors" style="margin-top:20px; display:flex; gap:16px; align-items:center; justify-content:center; flex-wrap:wrap;"></div>
+      </div>
+    </section>
+
+    <!-- PNG Illustration Space 3 -->
+    <section class="illustration-space section-space">
+      <div class="container">
+        <div class="content-flex-row content-flex-reverse">
+          <div class="content-col-image">
+            <div class="illustration-placeholder" id="pngIllustration3">
+              <img src="assets/illustrations/undraw_making-art_c05m.png" alt="National Competition">
+            </div>
+          </div>
+          <div class="content-col-text">
+            <h3 class="heading-featured">National Competition Framework</h3>
+            <p class="text-regular">
+              Our nationally recognized competition brings together the brightest minds from schools across the country. Students compete in various categories, demonstrating their leadership potential and competitive excellence on a national stage.
+            </p>
+            <ul class="text-features-list">
+              <li>Nationwide participant reach</li>
+              <li>Rigorous evaluation criteria</li>
+              <li>Multiple competition categories</li>
+              <li>Prestigious national rankings</li>
+            </ul>
+            <a href="competition/overview.html" class="content-link">View Competition Rules →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIDDLE SPONSORS SECTION -->
+    <section class="features sponsors-section-middle">
+      <div class="container">
+        <div id="middleSponsorsDisplay" class="sponsors-grid">
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <h2><i class="fas fa-school" style="margin-right: 10px;"></i>All Registered Schools</h2>
+        <p class="section-description">Click on any school to view their students and finalists competing in the nationals.</p>
+        <div id="schoolsContainer" class="schools-grid">
+          <p class="loading-text">Loading schools...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PNG Illustration Space 4 -->
+    <section class="illustration-space section-space">
+      <div class="container">
+        <div class="content-flex-row">
+          <div class="content-col-image">
+            <div class="illustration-placeholder" id="pngIllustration4">
+              <img src="assets/illustrations/undraw_digital-artwork_xlmm.png" alt="Recognition & Awards">
+            </div>
+          </div>
+          <div class="content-col-text">
+            <h3 class="heading-featured">Recognition & Awards</h3>
+            <p class="text-regular">
+              Winners at Pencil Royals receive national recognition and prestigious awards that elevate their academic profiles. Our competition honors excellence in leadership, creativity, and innovation, opening doors to extraordinary opportunities for future success.
+            </p>
+            <ul class="text-features-list">
+              <li>National championship titles</li>
+              <li>Official certificates of achievement</li>
+              <li>Career advancement opportunities</li>
+              <li>University scholarship considerations</li>
+            </ul>
+            <a href="results.html" class="content-link">View Winners & Results →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM SPONSORS SECTION -->
+    <section class="features sponsors-section-bottom">
+      <div class="container">
+        <div id="bottomSponsorsDisplay" class="sponsors-grid-bottom">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Fullscreen Calendar Modal -->
+  <div id="calendarFullscreenModal" class="fullscreen-modal">
+    <button class="fullscreen-close-btn" onclick="closeCalendarFullscreen()">×</button>
+    <div class="fullscreen-modal-content">
+      <img src="assets/img/Pencil Royals calendar_page-0001.jpg" alt="Pencil Royals Calendar Full Screen">
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Pencil Royal. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="competition/overview.html">Competition Rules</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/scroll-animations.js"></script>
+  <script>
+    async function loadTopStudents() {
+      try {
+        const sb = await getSupabase();
+        
+        // Get top 10 students by average score from competition_scores
+        const { data: studentScores } = await sb
+          .from('competition_scores')
+          .select('student_id, score, students(id, name, gender, school_id, schools(name))')
+          .order('score', { ascending: false })
+          .limit(100);
+
+        // Group by student and calculate average
+        const studentAvgs = {};
+        if (studentScores) {
+          studentScores.forEach(record => {
+            const sId = record.student_id;
+            if (!studentAvgs[sId]) {
+              studentAvgs[sId] = { scores: [], student: record.students };
+            }
+            studentAvgs[sId].scores.push(record.score);
+          });
+        }
+
+        // Calculate averages and get top 10
+        const topStudents = Object.values(studentAvgs)
+          .map(item => ({
+            ...item.student,
+            avgScore: Math.round(item.scores.reduce((a, b) => a + b, 0) / item.scores.length)
+          }))
+          .sort((a, b) => b.avgScore - a.avgScore)
+          .slice(0, 10);
+
+        const container = document.getElementById('topStudentsContainer');
+        if (topStudents.length === 0) {
+          container.innerHTML = '<p class="loading-text">No competition scores yet</p>';
+        } else {
+          container.innerHTML = `
+            <table class="top-students-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student Name</th>
+                  <th>School</th>
+                  <th>Gender</th>
+                  <th>Avg. Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${topStudents.map((student, idx) => `
+                  <tr>
+                    <td class="rank-cell"><span class="rank-badge">${idx + 1}</span></td>
+                    <td>${student.name}</td>
+                    <td>${student.schools?.name || 'N/A'}</td>
+                    <td>${student.gender === 'male' ? 'Boy' : 'Girl'}</td>
+                    <td class="score-cell">${student.avgScore}%</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading top students:', error);
+        document.getElementById('topStudentsContainer').innerHTML = '<p style="color: red;">Error loading data</p>';
+      }
+    }
+
+    async function loadFinalists() {
+      try {
+        const sb = await getSupabase();
+
+        // Get all finalists with their school and student info
+        const { data: finalists } = await sb
+          .from('finalists')
+          .select('students(id, name, gender), schools(id, name)')
+          .order('schools(name)');
+
+        // Group by school
+        const schoolFinalists = {};
+        if (finalists) {
+          finalists.forEach(finalist => {
+            const schoolName = finalist.schools?.name || 'Unknown School';
+            if (!schoolFinalists[schoolName]) {
+              schoolFinalists[schoolName] = { boys: [], girls: [] };
+            }
+            if (finalist.students.gender === 'male') {
+              schoolFinalists[schoolName].boys.push(finalist.students);
+            } else {
+              schoolFinalists[schoolName].girls.push(finalist.students);
+            }
+          });
+        }
+
+        const container = document.getElementById('finalistsContainer');
+        
+        if (Object.keys(schoolFinalists).length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No finalists selected yet</p>';
+        } else {
+          container.innerHTML = Object.entries(schoolFinalists)
+            .sort((a, b) => a[0].localeCompare(b[0]))
+            .map(([schoolName, finalists]) => `
+              <div class="finalist-card">
+                <h3 class="finalist-school-name">${schoolName}</h3>
+                <div class="finalist-pair">
+                  <div class="finalist-slot">
+                    <div class="finalist-label">Boy Finalist</div>
+                    ${finalists.boys.length > 0
+                      ? `<div class="finalist-name">${finalists.boys[0].name}</div>`
+                      : '<div class="finalist-empty">Not selected</div>'}
+                  </div>
+                  <div class="finalist-slot">
+                    <div class="finalist-label">Girl Finalist</div>
+                    ${finalists.girls.length > 0
+                      ? `<div class="finalist-name">${finalists.girls[0].name}</div>`
+                      : '<div class="finalist-empty">Not selected</div>'}
+                  </div>
+                </div>
+              </div>
+            `).join('');
+        }
+      } catch (error) {
+        console.error('Error loading finalists:', error);
+        document.getElementById('finalistsContainer').innerHTML = '<p style="color: red; grid-column: 1/-1;">Error loading data</p>';
+      }
+    }
+
+    // Load custom assets and organization info
+    async function loadOrganizationAssets() {
+      try {
+        const sb = await getSupabase();
+
+        // Load hero banner
+        const { data: banners } = await sb
+          .from('org_assets')
+          .select('*')
+          .eq('asset_type', 'banner')
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (banners && banners.length > 0) {
+          const heroBannerContainer = document.getElementById('heroBannerContainer');
+          heroBannerContainer.innerHTML = `<img src="${banners[0].public_url}" alt="Hero Banner" class="hero-banner-image">`;
+        }
+
+        // Load logo
+        const { data: logos } = await sb
+          .from('org_assets')
+          .select('*')
+          .eq('asset_type', 'logo')
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (logos && logos.length > 0) {
+          const orgLogoContainer = document.getElementById('orgLogoContainer');
+          orgLogoContainer.innerHTML = `<img src="${logos[0].public_url}" alt="Organization Logo" class="org-logo">`;
+        }
+
+        // Load organization info
+        const { data: orgInfo } = await sb
+          .from('org_info')
+          .select('*')
+          .eq('id', 1)
+          .single();
+
+        if (orgInfo) {
+          if (orgInfo.about_text) {
+            document.getElementById('orgAbout').textContent = orgInfo.about_text;
+          }
+          if (orgInfo.mission_text) {
+            document.getElementById('orgMission').textContent = orgInfo.mission_text;
+            document.getElementById('missionContainer').style.display = 'block';
+          }
+        }
+
+        // Load illustrations
+        const { data: illustrations } = await sb
+          .from('org_assets')
+          .select('*')
+          .eq('asset_type', 'illustrations')
+          .order('created_at', { ascending: false });
+
+        if (illustrations && illustrations.length > 0) {
+          const illustrationsGrid = document.getElementById('illustrationsGrid');
+          const illustrationsSection = document.getElementById('illustrationsSection');
+          illustrationsSection.style.display = 'block';
+          
+          const infoTexts = [
+            {
+              title: "Build Leadership Skills",
+              description: "Students develop critical thinking, decision-making, and team management abilities through competitive challenges and real-world scenarios."
+            },
+            {
+              title: "Showcase Your Talent",
+              description: "Compete on a national stage and demonstrate your school's excellence in academics, creativity, and innovation across multiple competition formats."
+            },
+            {
+              title: "Network & Connect",
+              description: "Meet top-performing students from schools across the country, build lasting connections, and exchange ideas with future leaders."
+            },
+            {
+              title: "Win Recognition",
+              description: "Earn prestigious awards, certificates, and recognition that enhance your academic portfolio and college/university applications."
+            }
+          ];
+          
+          illustrationsGrid.innerHTML = illustrations.map((img, index) => {
+            const info = infoTexts[index] || { title: "Achievement", description: "Strive for excellence and reach new heights." };
+            const isEven = index % 2 === 0;
+            
+            return `
+              <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap; ${!isEven ? 'flex-direction: row-reverse;' : ''}">
+                <div style="flex: 1; min-width: 300px;">
+                  <img src="${img.public_url}" alt="${img.original_filename}" style="width: 100%; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                  <h3 style="color: #1a3c5e; font-size: 24px; margin-bottom: 12px; font-weight: 600;">${info.title}</h3>
+                  <p style="color: #555; font-size: 16px; line-height: 1.8; margin-bottom: 15px;">${info.description}</p>
+                  <a href="competition/overview.html" style="display: inline-block; padding: 10px 25px; background: #c9a961; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; transition: background 0.3s;">Learn More →</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Show manage assets button if admin is logged in (optional)
+        // Uncomment this if you have auth setup
+        // const { data: user } = await sb.auth.getUser();
+        // if (user) {
+        //   document.getElementById('manageAssetsBtn').style.display = 'inline-block';
+        // }
+      } catch (error) {
+        console.log('Organization assets not found or error loading:', error);
+      }
+    }
+
+    async function loadSponsors() {
+      try {
+        const sb = await getSupabase();
+
+        const { data: sponsors, error } = await sb
+          .from('sponsors')
+          .select('*')
+          .eq('active', true)
+          .order('position', { ascending: true })
+          .order('display_order', { ascending: true });
+
+        if (error) {
+          console.log('Sponsors table not found (first time setup), skipping sponsors');
+          return;
+        }
+
+        // Group sponsors by position
+        const grouped = { top: [], middle: [], bottom: [] };
+        if (sponsors) {
+          sponsors.forEach(sponsor => {
+            if (grouped[sponsor.position]) {
+              grouped[sponsor.position].push(sponsor);
+            }
+          });
+        }
+
+        // Render each group
+        Object.entries(grouped).forEach(([position, sponsorList]) => {
+          const containerId = `${position}SponsorsDisplay`;
+          const container = document.getElementById(containerId);
+          
+          if (!container) return;
+
+          if (sponsorList.length === 0) {
+            container.innerHTML = '';
+            container.parentElement.style.display = 'none';
+          } else {
+            container.innerHTML = sponsorList.map(sponsor => `
+              <div style="text-align: center;">
+                <img src="${sponsor.logo_url}" 
+                     alt="${sponsor.name}" 
+                     title="${sponsor.name}"
+                     style="width: ${sponsor.logo_width}px; height: ${sponsor.logo_height}px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); max-width: 100%;">
+              </div>
+            `).join('');
+            container.parentElement.style.display = 'block';
+          }
+        });
+
+        // Also render a simple sponsor strip inside the finalists section (if present)
+        try {
+          const strip = document.getElementById('finalistsSponsors');
+          if (strip) {
+            strip.innerHTML = (sponsors || []).map(s => `
+              <div style="padding:6px; display:flex; align-items:center; justify-content:center;">
+                <img src="${s.logo_url}" alt="${s.name}" title="${s.name}" style="max-height:60px; max-width:160px; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25)); background: rgba(255,255,255,0.9); padding:4px; border-radius:6px;">
+              </div>
+            `).join('');
+          }
+        } catch(e) { console.warn('Could not render finalists sponsor strip', e); }
+      } catch (error) {
+        console.log('Error loading sponsors:', error);
+      }
+    }
+
+    // Load data when page loads
+    window.addEventListener('load', async () => {
+      await loadOrganizationAssets();
+      await loadTopStudents();
+      await loadFinalists();
+      await loadSponsors();
+      await loadSchools();
+    });
+
+    async function loadSchools() {
+      try {
+        const sb = await getSupabase();
+
+        // Get all approved schools with student counts
+        const { data: schools } = await sb
+          .from('schools')
+          .select('id, name, location, profile_pic')
+          .order('name');
+
+        const container = document.getElementById('schoolsContainer');
+
+        if (!schools || schools.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No schools found</p>';
+          return;
+        }
+
+        // Get student counts for each school
+        const schoolsWithCounts = await Promise.all(
+          schools.map(async (school) => {
+            const { count: studentCount } = await sb
+              .from('students')
+              .select('id', { count: 'exact' })
+              .eq('school_id', school.id);
+
+            const { data: finalists } = await sb
+              .from('finalists')
+              .select('id')
+              .eq('school_id', school.id);
+
+            return {
+              ...school,
+              studentCount: studentCount || 0,
+              finalistCount: finalists?.length || 0
+            };
+          })
+        );
+
+        container.innerHTML = schoolsWithCounts.map(school => `
+          <a href="school-detail.html?school=${school.id}" class="school-card">
+            <div class="school-card-image-wrapper">
+              ${school.profile_pic
+                ? `<img src="${school.profile_pic}" alt="${school.name}" class="school-card-image">`
+                : '<div class="school-card-no-image">No Photo</div>'}
+            </div>
+            <div class="school-card-content">
+              <h3 class="school-card-title">${school.name}</h3>
+              <p class="school-card-location">${school.location || 'Location not specified'}</p>
+              <div class="school-card-footer">
+                <div class="school-card-stat">
+                  <span class="school-card-stat-value">${school.studentCount}</span>
+                  <span class="school-card-stat-label">Students</span>
+                </div>
+                <div class="school-card-stat">
+                  <span class="school-card-stat-value" style="color: var(--primary-gold);">${school.finalistCount}</span>
+                  <span class="school-card-stat-label">Finalists</span>
+                </div>
+              </div>
+              <div class="school-card-action">
+                View Details →
+              </div>
+            </div>
+          </a>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading schools:', error);
+        document.getElementById('schoolsContainer').innerHTML = '<p style="color: red; grid-column: 1/-1;">Error loading data</p>';
+      }
+    }
+
+    // Fullscreen Calendar Functions
+    function openCalendarFullscreen() {
+      const modal = document.getElementById('calendarFullscreenModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCalendarFullscreen() {
+      const modal = document.getElementById('calendarFullscreenModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close fullscreen when clicking outside the image
+    document.getElementById('calendarFullscreenModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeCalendarFullscreen();
+      }
+    });
+
+    // Close fullscreen with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeCalendarFullscreen();
+      }
+    });
+
+    // Hamburger Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', function() {
+        hamburgerBtn.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+
+      // Close menu when a link is clicked
+      const navLinks = navMenu.querySelectorAll('a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const isClickInsideMenu = navMenu.contains(event.target);
+        const isClickOnHamburger = hamburgerBtn.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnHamburger && navMenu.classList.contains('active')) {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        }
+      });
+    }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3JG2CZ6NET"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3JG2CZ6NET');
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Pencil Royals",
+    "url": "https://pencilroyals.com"
+  }
+  </script>
+</body>
+</html>

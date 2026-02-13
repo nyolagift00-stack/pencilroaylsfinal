@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Setup - Pencil Royal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .setup-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+    h1 {
+      color: #1a3c5e;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .subtitle {
+      color: #666;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .step {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border-left: 4px solid #1a3c5e;
+    }
+    .step-number {
+      display: inline-block;
+      background: #1a3c5e;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .step-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a3c5e;
+      margin-bottom: 10px;
+    }
+    .step-content {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .code-block {
+      background: #1a3c5e;
+      color: #0f0;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      margin: 10px 0;
+      line-height: 1.4;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: #1a3c5e;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0d1f2d;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(26, 60, 94, 0.3);
+    }
+    .btn-secondary {
+      background: #ecf0f1;
+      color: #1a3c5e;
+    }
+    .btn-secondary:hover {
+      background: #d5dbdb;
+    }
+    .link-text {
+      color: #1a3c5e;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .link-text:hover {
+      text-decoration: underline;
+    }
+    .status {
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    .highlight {
+      background: #fff3cd;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="setup-container">
+    <h1>Pencil Royal Setup</h1>
+    <p class="subtitle">Complete these steps to start using the platform</p>
+
+    <div id="statusBox"></div>
+
+    <!-- Step 1: Supabase Tables -->
+    <div class="step">
+      <div class="step-number">1</div>
+      <div class="step-title">Create Database Tables</div>
+      <div class="step-content">
+        <p>You need to create the database tables in Supabase SQL Editor.</p>
+        <p style="margin-top: 10px;"><strong>Takes 2 minutes</strong></p>
+        <ol style="margin-left: 20px; margin-top: 10px;">
+          <li>Open <a href="https://app.supabase.com/project/tjooofnjwwtgageayezr/sql/new" target="_blank" class="link-text">Supabase SQL Editor →</a></li>
+          <li>Copy the SQL below</li>
+          <li>Paste it in the editor</li>
+          <li>Click the <span class="highlight">▶ Run</span> button</li>
+        </ol>
+        <div class="code-block">CREATE TABLE IF NOT EXISTS schools (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    location TEXT,
+    profile_pic TEXT,
+    approved BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS students (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    gender TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS competitions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS results (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+    rank INTEGER,
+    score INTEGER,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS votes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    voter_id UUID,
+    created_at TIMESTAMP DEFAULT NOW()
+);</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Verify Tables -->
+    <div class="step">
+      <div class="step-number">2</div>
+      <div class="step-title">Verify Tables Created</div>
+      <div class="step-content">
+        <p>After running the SQL, click the button below to verify everything is set up:</p>
+      </div>
+      <button class="btn-primary" onclick="checkDatabase()">✓ Verify Database Setup</button>
+    </div>
+
+    <!-- Step 3: Go to App -->
+    <div class="step">
+      <div class="step-number">3</div>
+      <div class="step-title">Start Using the App</div>
+      <div class="step-content">
+        <p>Once the database is verified, you can register a school or login:</p>
+      </div>
+      <div class="button-group">
+        <button class="btn-secondary" onclick="goHome()">← Back Home</button>
+        <button class="btn-primary" onclick="goSignup()">Register School →</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Initialize Supabase directly here since setup.html doesn't use supabase-client.js
+    const SUPABASE_URL = 'https://tjooofnjwwtgageayezr.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqb29vZm5qd3d0Z2FnZWF5ZXpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NTI1NDIsImV4cCI6MjA4NjAyODU0Mn0.Pg8ldP8qI6e70WNGNzdnAbMmgAlL1rb6w41sGjXFc9Y';
+    
+    let sbInstance = null;
+
+    function initSupabase() {
+      try {
+        if (window.supabase && window.supabase.createClient) {
+          sbInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          console.log('✓ Supabase initialized');
+          return true;
+        } else if (window.Supabase && window.Supabase.createClient) {
+          sbInstance = window.Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          console.log('✓ Supabase initialized');
+          return true;
+        }
+      } catch (e) {
+        console.error('Supabase init error:', e);
+      }
+      return false;
+    }
+
+    // Try multiple times
+    let initAttempts = 0;
+    const initInterval = setInterval(() => {
+      if (initSupabase()) {
+        clearInterval(initInterval);
+      } else if (++initAttempts > 50) {
+        clearInterval(initInterval);
+        console.error('Failed to initialize Supabase after 50 attempts');
+      }
+    }, 100);
+
+    async function checkDatabase() {
+      const statusBox = document.getElementById('statusBox');
+      statusBox.innerHTML = '<div class="status info">⏳ Checking database...</div>';
+      
+      try {
+        if (!sbInstance) {
+          statusBox.innerHTML = '<div class="status error">❌ Supabase not initialized. Retrying...</div>';
+          setTimeout(checkDatabase, 1000);
+          return;
+        }
+
+        console.log('Attempting to query schools table...');
+        const { data, error, count } = await sbInstance.from('schools').select('*', { count: 'exact', head: true });
+        
+        if (error) {
+          console.error('Query error:', error);
+          if (error.code === 'PGRST116' || error.message.includes('does not exist')) {
+            statusBox.innerHTML = '<div class="status error">❌ Tables not found. Have you run the SQL yet?</div>';
+            return;
+          }
+          statusBox.innerHTML = '<div class="status error">❌ Error: ' + error.message + '</div>';
+          return;
+        }
+        
+        console.log('Query successful!');
+        statusBox.innerHTML = '<div class="status success">✅ Database is ready! You can now register and login.</div>';
+        
+      } catch (err) {
+        console.error('Check error:', err);
+        statusBox.innerHTML = '<div class="status error">❌ Error: ' + err.message + '</div>';
+      }
+    }
+    
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+    
+    function goSignup() {
+      window.location.href = 'signup.html';
+    }
+
+    // Auto-check on page load
+    window.addEventListener('load', () => {
+      setTimeout(checkDatabase, 1500);
+    });
+  </script>
+</body>
+</html>
