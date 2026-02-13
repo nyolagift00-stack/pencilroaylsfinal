@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - Pencil Royal</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .admin-header {
+      background: linear-gradient(135deg, #d4af37 0%, #e6c750 100%);
+      color: #333;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .admin-header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+    .admin-header p {
+      margin: 10px 0 0 0;
+      opacity: 0.9;
+    }
+    .schools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .school-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      border-left: 4px solid #1a3c5e;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .school-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      transform: translateY(-4px);
+    }
+    .school-card h3 {
+      margin: 0 0 10px 0;
+      color: #1a3c5e;
+      font-size: 18px;
+    }
+    .school-card p {
+      margin: 5px 0;
+      color: #666;
+      font-size: 14px;
+    }
+    .school-card .btn {
+      margin-top: 15px;
+      display: inline-block;
+      padding: 8px 16px;
+      background: #1a3c5e;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .school-card .btn:hover {
+      background: #0d1f2d;
+    }
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .search-box {
+      flex: 1;
+      margin-right: 20px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="logo">Pencil Royal</div>
+      <button class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="navMenu" class="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="admin-panel.html" class="active">Admin Panel</a>
+        <button id="logoutBtn" class="btn outline">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <div class="admin-header">
+      <h1>Admin Panel</h1>
+      <p>Manage all schools and competitions.</p>
+    </div>
+
+    <div class="nav-bar">
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search schools by name or location..."
+          onkeyup="filterSchools()"
+        >
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+      <a href="admin-panel.html" style="padding: 10px 20px; background: #1a3c5e; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">📋 Schools</a>
+      <a href="admin-school-verification.html" style="padding: 10px 20px; background: #667eea; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">🔐 Verify Schools</a>
+      <a href="admin-intercompitions.html" style="padding: 10px 20px; background: #667eea; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">⚡ Competitions</a>
+      <a href="admin-results.html" style="padding: 10px 20px; background: #d4af37; color: #3a2f28; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">🏆 Results</a>
+    </div>
+
+    <h2 style="color: #1a3c5e; margin-bottom: 20px;">All Schools</h2>
+    <div id="schoolsContainer" class="schools-grid">
+      <p style="text-align: center; color: #666;">Loading schools...</p>
+    </div>
+
+    <!-- SPONSORS SECTION -->
+    <hr style="margin: 40px 0; border: none; border-top: 2px solid #d4af37;">
+    
+    <h2 style="color: #1a3c5e; margin-bottom: 20px;">🎯 Manage Sponsors</h2>
+    
+    <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px;">
+      <h3 style="color: #1a3c5e; margin-top: 0;">Add New Sponsor</h3>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+          <label for="sponsorName" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Sponsor Name</label>
+          <input type="text" id="sponsorName" placeholder="Enter sponsor name" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+        
+        <div>
+          <label for="sponsorPosition" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Position</label>
+          <select id="sponsorPosition" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+            <option value="top">Top (Header)</option>
+            <option value="middle">Middle (Content)</option>
+            <option value="bottom">Bottom (Footer)</option>
+          </select>
+        </div>
+        
+        <div>
+          <label for="sponsorLogo" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Logo Image</label>
+          <input type="file" id="sponsorLogo" accept="image/*" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+          <label for="sponsorWidth" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Logo Width (px)</label>
+          <input type="number" id="sponsorWidth" value="150" min="50" max="400" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+        
+        <div>
+          <label for="sponsorHeight" style="display: block; margin-bottom: 5px; font-weight: 600; color: #333;">Logo Height (px)</label>
+          <input type="number" id="sponsorHeight" value="60" min="30" max="200" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+      </div>
+      
+      <button onclick="addSponsor()" style="padding: 12px 30px; background: #27ae60; color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px;">
+        ➕ Add Sponsor
+      </button>
+    </div>
+
+    <h3 style="color: #1a3c5e; margin-bottom: 15px;">Top Sponsors</h3>
+    <div id="topSponsorsContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+      <p style="text-align: center; color: #666; grid-column: 1/-1;">Loading sponsors...</p>
+    </div>
+
+    <h3 style="color: #1a3c5e; margin-bottom: 15px;">Middle Sponsors</h3>
+    <div id="middleSponsorsContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+      <p style="text-align: center; color: #666; grid-column: 1/-1;">Loading sponsors...</p>
+    </div>
+
+    <h3 style="color: #1a3c5e; margin-bottom: 15px;">Bottom Sponsors</h3>
+    <div id="bottomSponsorsContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+      <p style="text-align: center; color: #666; grid-column: 1/-1;">Loading sponsors...</p>
+    </div>
+    
+    <!-- Embedded Results Section (moved from admin-results.html) -->
+    <hr style="margin: 40px 0; border: none; border-top: 2px solid #d4af37;">
+    <section id="resultsSection">
+      <h2 style="color: #1a3c5e; margin-bottom: 20px;">🏆 National Competition Results</h2>
+
+      <div class="competition-selector" style="margin-bottom: 20px;">
+        <label for="competitionSelect" style="display:block; margin-bottom:10px; font-weight:bold;">Select Competition:</label>
+        <select id="competitionSelect">
+          <option value="">-- Choose Competition --</option>
+        </select>
+      </div>
+
+      <div id="resultsInfo" class="results-info" style="display:none;">
+        <h3 id="competitionName"></h3>
+        <p><strong>Total Schools Competing:</strong> <span id="totalSchools">0</span></p>
+        <p><strong>Results Status:</strong> <span id="resultsStatus"></span></p>
+      </div>
+
+      <div id="podiumSection" style="display:none; margin-bottom:40px;">
+        <h2 style="text-align:center; color:#3a2f28; margin-bottom:20px;">🏆 Winners Podium</h2>
+        <div class="podium" id="podium"></div>
+      </div>
+
+      <div id="resultsActionsSection" class="results-actions" style="display:none;">
+        <button class="btn-add" id="addResultBtn">+ Add Result</button>
+        <button class="btn-export" id="exportBtn">Export Results (CSV)</button>
+        <button class="btn-refresh" id="refreshBtn">Refresh Results</button>
+      </div>
+
+      <div id="editForm" class="results-edit-form" style="display:none;">
+        <h3 id="formTitle">Add New Result</h3>
+        <div class="form-group">
+          <label for="editSchool">School:</label>
+          <select id="editSchool"><option value="">-- Select School --</option></select>
+        </div>
+        <div class="form-group"><label for="editRank">Rank:</label><input type="number" id="editRank" min="1" placeholder="Enter rank"></div>
+        <div class="form-group"><label for="editScore">Score:</label><input type="number" id="editScore" min="0" max="100" placeholder="Enter score"></div>
+        <div class="form-group"><label for="editWins">Wins:</label><input type="number" id="editWins" min="0" placeholder="Enter wins"></div>
+        <div class="form-group"><label for="editLosses">Losses:</label><input type="number" id="editLosses" min="0" placeholder="Enter losses"></div>
+        <div class="form-actions">
+          <button class="btn-save" id="saveEditBtn">Save Result</button>
+          <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="results-container">
+        <div id="resultsContent">
+          <div class="empty-results"><div class="empty-results-icon">📊</div><p>Select a competition to view results</p></div>
+        </div>
+      </div>
+
+      <div id="legendSection" class="legend" style="display:none;">
+        <div class="legend-item"><div class="legend-box gold"></div><span>1st Place - Winner</span></div>
+        <div class="legend-item"><div class="legend-box silver"></div><span>2nd Place - Runner-up</span></div>
+        <div class="legend-item"><div class="legend-box bronze"></div><span>3rd Place</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>
+    let allSchools = [];
+
+    async function init() {
+      try {
+        // Check if user is logged in
+        const user = await getCurrentUser();
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Check if user is admin using the new role-based system
+        const isAdmin = await isUserAdmin(user.id);
+
+        if (!isAdmin) {
+          // Show message that they need to be admin
+          document.querySelector('main').innerHTML = `
+            <div style="max-width: 600px; margin: 50px auto; padding: 30px; background: #ffe6e6; border-radius: 8px; border-left: 4px solid #dc3545;">
+              <h2 style="color: #dc3545; margin: 0 0 15px 0;">❌ Access Denied</h2>
+              <p style="color: #666; margin: 10px 0;">
+                Your account is not an admin account.
+              </p>
+              <p style="color: #666; margin: 10px 0;">
+                <strong>Your email:</strong> ${user.email}
+              </p>
+              <p style="color: #666; margin: 15px 0;">
+                To become an admin, contact your system administrator and have them run this script in Supabase SQL Editor:
+              </p>
+              <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 12px;">
+INSERT INTO user_roles (user_id, role)
+SELECT auth.uid(), 'admin'
+WHERE NOT EXISTS (
+  SELECT 1 FROM user_roles 
+  WHERE user_id = auth.uid()
+);</pre>
+              <button onclick="logout()" style="margin-top: 20px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                Logout
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        // User is admin - show admin panel
+        console.log('Admin authenticated:', user.email);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        loadAllSchools();
+        loadSponsors();
+        // Load competitions and prepare Results section embedded below
+        try { loadCompetitions(); } catch(e) { console.warn('loadCompetitions not available yet:', e); }
+      } catch (err) {
+        console.error('Init error:', err);
+        showAlert('error', 'Error: ' + err.message);
+      }
+    }
+
+    async function loadAllSchools() {
+      try {
+        const sb = await getSupabase();
+        
+        const { data: schools, error } = await sb.from('schools').select('*').order('name');
+        
+        if (error) {
+          showAlert('error', 'Error loading schools: ' + error.message);
+          return;
+        }
+
+        allSchools = schools || [];
+        renderSchools(allSchools);
+      } catch (err) {
+        console.error('Error:', err);
+        showAlert('error', 'Failed to load schools: ' + err.message);
+      }
+    }
+
+    function renderSchools(schools) {
+      const container = document.getElementById('schoolsContainer');
+      
+      if (!schools || schools.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No schools found.</p>';
+        return;
+      }
+
+      container.innerHTML = schools.map(school => `
+        <div class="school-card">
+          <h3>${school.name}</h3>
+          <p>${school.location || 'Location TBA'}</p>
+          <p>Status: <span style="color: ${school.approved ? '#27ae60' : '#e74c3c'}; font-weight: 600;">
+            ${school.approved ? 'Approved' : 'Pending'}
+          </span></p>
+          <button
+            class="btn"
+            onclick="editSchoolCompetitions('${school.id}', '${school.name}')"
+          >
+            Edit Competitions
+          </button>
+          <button 
+            class="btn" 
+            style="background: #d4af37; color: #333; margin-left: 10px;"
+            onclick="editSchoolDetails('${school.id}')"
+          >
+            Edit Details
+          </button>
+          <button 
+            class="btn" 
+            style="background: #28a745; margin-left: 10px;"
+            onclick="viewSchoolDetails('${school.id}')"
+          >
+            View Details
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function filterSchools() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allSchools.filter(school => 
+        school.name.toLowerCase().includes(searchTerm) || 
+        (school.location && school.location.toLowerCase().includes(searchTerm))
+      );
+      renderSchools(filtered);
+    }
+
+    function editSchoolCompetitions(schoolId, schoolName) {
+      // Redirect to admin intercompitions page
+      console.log('🔗 Navigating to edit competitions...');
+      console.log('School ID:', schoolId);
+      console.log('School Name:', schoolName);
+      
+      if (!schoolId) {
+        console.error('❌ School ID is empty!');
+        showAlert('error', 'School ID is missing');
+        return;
+      }
+      
+      const url = `admin-intercompitions.html?school=${schoolId}&name=${encodeURIComponent(schoolName)}`;
+      console.log('URL:', url);
+      window.location.href = url;
+    }
+
+    function editSchoolDetails(schoolId) {
+      // Redirect to admin school details editor
+      window.location.href = `admin-school-details.html?school=${schoolId}`;
+    }
+
+    function viewSchoolDetails(schoolId) {
+      window.location.href = `school-detail.html?school=${schoolId}`;
+    }
+
+    // ============ SPONSORS MANAGEMENT ============
+
+    async function addSponsor() {
+      try {
+        const name = document.getElementById('sponsorName').value.trim();
+        const position = document.getElementById('sponsorPosition').value;
+        const width = parseInt(document.getElementById('sponsorWidth').value);
+        const height = parseInt(document.getElementById('sponsorHeight').value);
+        const logoFile = document.getElementById('sponsorLogo').files[0];
+
+        if (!name) {
+          showAlert('error', '❌ Please enter sponsor name');
+          return;
+        }
+
+        if (!logoFile) {
+          showAlert('error', '❌ Please select a logo image');
+          return;
+        }
+
+        showLoader();
+
+        // Convert image to Base64
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          try {
+            const base64Image = e.target.result; // Data URL like data:image/png;base64,...
+            const sb = await getSupabase();
+
+            // Insert sponsor into database with Base64 image
+            const { error: insertError, data: sponsorData } = await sb.from('sponsors').insert({
+              name,
+              position,
+              logo_url: base64Image, // Store Base64 directly
+              logo_width: width,
+              logo_height: height,
+              active: true,
+              display_order: 0
+            }).select();
+
+            if (insertError) {
+              console.error('Insert error:', insertError);
+              hideLoader();
+              showAlert('error', '❌ Error adding sponsor: ' + insertError.message);
+              return;
+            }
+
+            console.log('✅ Sponsor created:', sponsorData);
+
+            hideLoader();
+            showAlert('success', '✅ Sponsor added successfully!');
+
+            // Clear form
+            document.getElementById('sponsorName').value = '';
+            document.getElementById('sponsorLogo').value = '';
+            document.getElementById('sponsorWidth').value = 150;
+            document.getElementById('sponsorHeight').value = 60;
+
+            // Reload sponsors
+            loadSponsors();
+          } catch (err) {
+            hideLoader();
+            console.error('Error processing image:', err);
+            showAlert('error', '❌ Error: ' + err.message);
+          }
+        };
+
+        reader.onerror = () => {
+          hideLoader();
+          showAlert('error', '❌ Error reading file');
+        };
+
+        reader.readAsDataURL(logoFile);
+      } catch (err) {
+        hideLoader();
+        console.error('Error adding sponsor:', err);
+        showAlert('error', '❌ Error: ' + err.message);
+      }
+    }
+
+    async function loadSponsors() {
+      try {
+        const sb = await getSupabase();
+
+        const { data: sponsors, error } = await sb
+          .from('sponsors')
+          .select('*')
+          .eq('active', true)
+          .order('position', { ascending: true })
+          .order('display_order', { ascending: true });
+
+        if (error) throw error;
+
+        renderSponsors(sponsors || []);
+      } catch (err) {
+        console.error('Error loading sponsors:', err);
+      }
+    }
+
+    function renderSponsors(sponsors) {
+      const positions = { top: 'topSponsorsContainer', middle: 'middleSponsorsContainer', bottom: 'bottomSponsorsContainer' };
+
+      // Clear all containers
+      Object.values(positions).forEach(id => {
+        document.getElementById(id).innerHTML = '';
+      });
+
+      if (!sponsors || sponsors.length === 0) {
+        Object.values(positions).forEach(id => {
+          document.getElementById(id).innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No sponsors yet</p>';
+        });
+        return;
+      }
+
+      // Group by position
+      const grouped = { top: [], middle: [], bottom: [] };
+      sponsors.forEach(sponsor => {
+        if (grouped[sponsor.position]) {
+          grouped[sponsor.position].push(sponsor);
+        }
+      });
+
+      // Render each group
+      Object.entries(grouped).forEach(([pos, sponsorList]) => {
+        const container = document.getElementById(positions[pos]);
+        if (sponsorList.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No sponsors in this section</p>';
+        } else {
+          container.innerHTML = sponsorList.map(sponsor => `
+            <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+              <div style="width: 100%; height: ${sponsor.logo_height}px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; background: #f9f9f9; border-radius: 4px;">
+                <img src="${sponsor.logo_url}" 
+                     alt="${sponsor.name}" 
+                     style="width: ${sponsor.logo_width}px; height: ${sponsor.logo_height}px; object-fit: contain; max-width: 100%;">
+              </div>
+              <h4 style="color: #1a3c5e; margin: 10px 0;">${sponsor.name}</h4>
+              <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                ${sponsor.logo_width}px × ${sponsor.logo_height}px
+                <br>
+                <span style="font-size: 11px; color: #999; word-break: break-all;">${sponsor.logo_url.substring(0, 40)}...</span>
+              </div>
+              <button onclick="editSponsor('${sponsor.id}')" style="padding: 6px 12px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 5px;">
+                Edit
+              </button>
+              <button onclick="deleteSponsor('${sponsor.id}')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                Delete
+              </button>
+            </div>
+          `).join('');
+        }
+      });
+    }
+
+    async function editSponsor(sponsorId) {
+      const width = prompt('Enter new width (px):', '150');
+      if (width === null) return;
+
+      const height = prompt('Enter new height (px):', '60');
+      if (height === null) return;
+
+      try {
+        const sb = await getSupabase();
+        const { error } = await sb
+          .from('sponsors')
+          .update({ logo_width: parseInt(width), logo_height: parseInt(height) })
+          .eq('id', sponsorId);
+
+        if (error) throw error;
+
+        showAlert('success', '✅ Sponsor updated!');
+        loadSponsors();
+      } catch (err) {
+        console.error('Error updating sponsor:', err);
+        showAlert('error', '❌ Error: ' + err.message);
+      }
+    }
+
+    async function deleteSponsor(sponsorId) {
+      if (!confirm('Are you sure you want to delete this sponsor?')) return;
+
+      try {
+        const sb = await getSupabase();
+        const { error } = await sb
+          .from('sponsors')
+          .delete()
+          .eq('id', sponsorId);
+
+        if (error) throw error;
+
+        showAlert('success', '✅ Sponsor deleted!');
+        loadSponsors();
+      } catch (err) {
+        console.error('Error deleting sponsor:', err);
+        showAlert('error', '❌ Error: ' + err.message);
+      }
+    }
+
+    // ============ END SPONSORS MANAGEMENT ============
+
+    // Initialize on load
+    window.addEventListener('load', init);
+
+    // Hamburger Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', function() {
+        hamburgerBtn.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+
+      // Close menu when a link is clicked
+      const navLinks = navMenu.querySelectorAll('a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const isClickInsideMenu = navMenu.contains(event.target);
+        const isClickOnHamburger = hamburgerBtn.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnHamburger && navMenu.classList.contains('active')) {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        }
+      });
+    }
+    
+    // ======= Results section script (moved from admin-results.html) =======
+    let currentCompetition = null;
+    let allResults = [];
+    let editingResultId = null;
+
+    const competitionSelect = document.getElementById('competitionSelect');
+    const resultsInfo = document.getElementById('resultsInfo');
+    const podiumSection = document.getElementById('podiumSection');
+    const resultsActionsSection = document.getElementById('resultsActionsSection');
+    const resultsContent = document.getElementById('resultsContent');
+    const legendSection = document.getElementById('legendSection');
+    const editForm = document.getElementById('editForm');
+    const addResultBtn = document.getElementById('addResultBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editSchoolSelect = document.getElementById('editSchool');
+
+    // Load competitions into selector
+    async function loadCompetitions() {
+      try {
+        const supabase = await getSupabase();
+        const { data, error } = await supabase.from('competitions').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        competitionSelect.innerHTML = '<option value="">-- Choose Competition --</option>';
+        data.forEach(comp => {
+          const option = document.createElement('option'); option.value = comp.id; option.textContent = comp.name; competitionSelect.appendChild(option);
+        });
+      } catch (err) {
+        console.warn('Could not load competitions:', err.message || err);
+      }
+    }
+
+    competitionSelect && competitionSelect.addEventListener('change', () => {
+      if (competitionSelect.value) loadResults(competitionSelect.value); else resetResultsView();
+    });
+
+    async function loadResults(competitionId) {
+      try {
+        showLoader();
+        const supabase = await getSupabase();
+        currentCompetition = competitionId;
+        const { data: competition, error: compError } = await supabase.from('competitions').select('*').eq('id', competitionId).single(); if (compError) throw compError;
+        const { data: schools, error: schoolError } = await supabase.from('schools').select('id, name').order('name'); if (schoolError) throw schoolError;
+        // populate
+        allSchools = schools;
+        editSchoolSelect && (editSchoolSelect.innerHTML = '<option value="">-- Select School --</option>');
+        (schools||[]).forEach(s => { if (editSchoolSelect) { const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name; editSchoolSelect.appendChild(opt); } });
+        const { data: results, error: resultsError } = await supabase.from('national_results').select('*').eq('competition_id', competitionId).order('rank'); if (resultsError) throw resultsError;
+        allResults = results || [];
+        document.getElementById('competitionName').textContent = competition.name;
+        document.getElementById('totalSchools').textContent = schools.length;
+        document.getElementById('resultsStatus').textContent = results.length === 0 ? 'No results entered' : `${results.length} result(s) entered`;
+        resultsInfo.style.display = 'block'; resultsActionsSection.style.display = 'flex'; legendSection.style.display = 'flex';
+        renderResults(allResults); renderPodium(allResults);
+        hideLoader();
+      } catch (err) { hideLoader(); showAlert('Error loading results: ' + (err.message || err), 'error'); }
+    }
+
+    function renderResults(results) {
+      if (!results || results.length === 0) { resultsContent.innerHTML = `<div class="empty-results"><div class="empty-results-icon">📊</div><p>No results entered yet</p></div>`; return; }
+      let html = `<div class="results-table-wrapper"><table class="results-table"><thead><tr><th>Rank</th><th>School Name</th><th>Score</th><th>Wins</th><th>Losses</th><th>Actions</th></tr></thead><tbody>`;
+      results.forEach(result => { const school = (allSchools||[]).find(s => s.id === result.school_id); const schoolName = school ? school.name : 'Unknown School'; html += `<tr class="${result.rank===1?'winner':''}"><td><span class="rank-badge ${result.rank===1?'first':result.rank===2?'second':result.rank===3?'third':''}">#${result.rank}</span></td><td><span class="school-name">${schoolName}</span></td><td><span class="score-badge">${result.score||'--'}</span></td><td>${result.wins||0}</td><td>${result.losses||0}</td><td><button class="btn-edit" onclick="editResult('${result.id}','${result.school_id}',${result.rank},${result.score||0},${result.wins||0},${result.losses||0})">Edit</button> <button class="btn-delete" onclick="deleteResult('${result.id}')">Delete</button></td></tr>`; });
+      html += `</tbody></table></div>`; resultsContent.innerHTML = html;
+    }
+
+    function renderPodium(results) {
+      if (!results || results.length < 1) { podiumSection.style.display = 'none'; return; }
+      const top3 = results.filter(r=>r.rank<=3);
+      let podiumHtml = '';
+      if (top3.length>=2) { const second = top3.find(r=>r.rank===2); const schoolName = allSchools.find(s=>s.id===second.school_id)?.name||'Unknown'; podiumHtml += `<div class="podium-place second"><div class="podium-medal">🥈</div><div class="podium-rank">2nd Place</div><div class="podium-name">${schoolName}</div></div>`; }
+      if (top3.length>=1) { const first = top3.find(r=>r.rank===1); const schoolName = allSchools.find(s=>s.id===first.school_id)?.name||'Unknown'; podiumHtml += `<div class="podium-place first"><div class="podium-medal">🥇</div><div class="podium-rank">🏆 Winner</div><div class="podium-name">${schoolName}</div></div>`; }
+      if (top3.length>=3) { const third = top3.find(r=>r.rank===3); const schoolName = allSchools.find(s=>s.id===third.school_id)?.name||'Unknown'; podiumHtml += `<div class="podium-place third"><div class="podium-medal">🥉</div><div class="podium-rank">3rd Place</div><div class="podium-name">${schoolName}</div></div>`; }
+      document.getElementById('podium').innerHTML = podiumHtml; podiumSection.style.display = top3.length>0 ? 'block' : 'none';
+    }
+
+    addResultBtn && addResultBtn.addEventListener('click', () => { editingResultId = null; document.getElementById('formTitle').textContent = 'Add New Result'; editSchoolSelect.value=''; document.getElementById('editRank').value=''; document.getElementById('editScore').value=''; document.getElementById('editWins').value=''; document.getElementById('editLosses').value=''; editForm.style.display='block'; editForm.scrollIntoView({behavior:'smooth'}); });
+
+    window.editResult = function(resultId, schoolId, rank, score, wins, losses) { editingResultId = resultId; document.getElementById('formTitle').textContent = 'Edit Result'; editSchoolSelect.value = schoolId; document.getElementById('editRank').value = rank; document.getElementById('editScore').value = score; document.getElementById('editWins').value = wins; document.getElementById('editLosses').value = losses; editForm.style.display = 'block'; editForm.scrollIntoView({ behavior: 'smooth' }); };
+
+    window.deleteResult = async function(resultId) { if (!confirm('Delete this result?')) return; try { showLoader(); const supabase = await getSupabase(); const { error } = await supabase.from('national_results').delete().eq('id', resultId); if (error) throw error; loadResults(currentCompetition); showAlert('Result deleted', 'success'); } catch (err) { hideLoader(); showAlert('Error deleting result: ' + (err.message || err), 'error'); } };
+
+    cancelEditBtn && cancelEditBtn.addEventListener('click', ()=>{ editForm.style.display='none'; editingResultId=null; });
+
+    saveEditBtn && saveEditBtn.addEventListener('click', async ()=>{
+      try {
+        if (!editSchoolSelect.value) { showAlert('Select a school','error'); return; }
+        const rank = parseInt(document.getElementById('editRank').value); if (!rank || rank<1) { showAlert('Enter a valid rank','error'); return; }
+        showLoader(); const supabase = await getSupabase();
+        if (editingResultId) {
+          const payload = { school_id: editSchoolSelect.value, rank, score: parseInt(document.getElementById('editScore').value)||null, wins: parseInt(document.getElementById('editWins').value)||0, losses: parseInt(document.getElementById('editLosses').value)||0 };
+          console.log('Updating national_results:', editingResultId, payload);
+          const res = await supabase.from('national_results').update(payload).eq('id', editingResultId).select();
+          console.log('Update response:', res);
+          try { console.log('Update response (json):', JSON.stringify(res)); } catch(e) { console.warn('Could not stringify update response', e); }
+          if (res.error) throw res.error;
+          showAlert('Result updated successfully','success');
+        } else {
+          const payload = { competition_id: currentCompetition, school_id: editSchoolSelect.value, rank, score: parseInt(document.getElementById('editScore').value)||null, wins: parseInt(document.getElementById('editWins').value)||0, losses: parseInt(document.getElementById('editLosses').value)||0 };
+          console.log('Inserting national_results:', payload);
+          const res = await supabase.from('national_results').insert(payload).select();
+          console.log('Insert response:', res);
+          try { console.log('Insert response (json):', JSON.stringify(res)); } catch(e) { console.warn('Could not stringify insert response', e); }
+          if (res.error) throw res.error;
+          showAlert('Result added successfully','success');
+        }
+        editForm.style.display='none'; editingResultId=null; loadResults(currentCompetition);
+      } catch (err) { hideLoader(); showAlert('Error saving result: ' + (err.message || err), 'error'); }
+    });
+
+    exportBtn && exportBtn.addEventListener('click', ()=>{ if (!allResults || allResults.length===0) { showAlert('No results to export','error'); return; } let csv='Rank,School Name,Score,Wins,Losses\n'; allResults.forEach(result=>{ const school = allSchools.find(s=>s.id===result.school_id); const schoolName = school ? school.name : 'Unknown'; csv+=`${result.rank},"${schoolName}",${result.score||''},${result.wins||0},${result.losses||0}\n`; }); const blob=new Blob([csv],{type:'text/csv'}); const url=window.URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`national-results-${new Date().toISOString().split('T')[0]}.csv`; a.click(); });
+
+    refreshBtn && refreshBtn.addEventListener('click', ()=>{ if (currentCompetition) loadResults(currentCompetition); });
+
+    function resetResultsView() { resultsContent.innerHTML = `<div class="empty-results"><div class="empty-results-icon">📊</div><p>Select a competition to view results</p></div>`; resultsInfo.style.display='none'; resultsActionsSection.style.display='none'; podiumSection.style.display='none'; legendSection.style.display='none'; editForm.style.display='none'; }
+
+    // ======================================================================
+  </script>
+</html>

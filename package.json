@@ -1,0 +1,11 @@
+{
+  "name": "pencil-royal",
+  "version": "1.0.0",
+  "description": "National school competition website",
+  "scripts": {
+    "start": "echo 'Open index.html in browser'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}

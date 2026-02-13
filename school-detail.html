@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Details - Pencil Royal</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background: #f5f7fa; }
+    
+    .school-header {
+      background: white;
+      padding: 30px 0;
+      border-bottom: 2px solid #1a3c5e;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .school-header-content {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+    }
+    
+    .school-pic {
+      width: 150px;
+      height: 150px;
+      background: #f0f4f8;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #1a3c5e;
+    }
+    
+    .school-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .school-info h1 {
+      color: #1a3c5e;
+      margin-bottom: 5px;
+      font-size: 32px;
+    }
+    
+    .school-info p {
+      color: #666;
+      margin: 8px 0;
+      font-size: 16px;
+    }
+    
+    .section-container {
+      background: white;
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a3c5e;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e74c3c;
+      padding-bottom: 10px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-box {
+      background: #f0f4f8;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+      border-left: 4px solid #1a3c5e;
+    }
+    
+    .stat-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a3c5e;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .students-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    
+    .students-table thead {
+      background: #1a3c5e;
+      color: white;
+    }
+    
+    .students-table th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    .students-table td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .students-table tbody tr:hover {
+      background: #f0f4f8;
+    }
+    
+    .gender-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .gender-boy {
+      background: #d4e4f7;
+      color: #1a3c5e;
+    }
+    
+    .gender-girl {
+      background: #ffd4e5;
+      color: #c91e63;
+    }
+    
+    .finalist-badge {
+      background: #ffc107;
+      color: #333;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .finalist-section {
+      background: #fff3cd;
+      padding: 20px;
+      border-radius: 6px;
+      border: 2px solid #ffc107;
+      margin-top: 20px;
+    }
+    
+    .finalist-card {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #ffc107;
+    }
+    
+    .finalist-name {
+      font-weight: 600;
+      color: #1a3c5e;
+      font-size: 16px;
+    }
+    
+    .finalist-gender {
+      color: #666;
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    
+    .empty-message {
+      text-align: center;
+      color: #999;
+      padding: 30px;
+      font-style: italic;
+    }
+    
+    .back-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #1a3c5e;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      transition: background 0.3s ease;
+    }
+    
+    .back-btn:hover {
+      background: #0d1f2d;
+    }
+
+    @media (max-width: 768px) {
+      .school-header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .school-info h1 {
+        font-size: 24px;
+      }
+      
+      .students-table {
+        font-size: 14px;
+      }
+      
+      .students-table th, .students-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><img src="assets/img/logo.png" alt="Pencil Royal Logo" style="height:40px;"></div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="schools.html">All Schools</a>
+        <a href="results.html">Results</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="schools.html" class="back-btn">← Back to Schools</a>
+
+    <!-- School Header -->
+    <div class="school-header">
+      <div class="container">
+        <div class="school-header-content">
+          <div class="school-pic" id="schoolPic">
+            <img src="assets/img/logo.png" alt="School Picture" onerror="this.src='assets/img/logo.png'">
+          </div>
+          <div class="school-info">
+            <h1 id="schoolName">Loading...</h1>
+            <p><strong>Location:</strong> <span id="schoolLocation">-</span></p>
+            <p><strong>Students:</strong> <span id="totalStudents">0</span></p>
+            <p><strong>Finalists for Nationals:</strong> <span id="finalistCount">0</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="section-container">
+      <div class="section-title">Student Statistics</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-number" id="boysCount">0</div>
+          <div class="stat-label">Boys Registered</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="girlsCount">0</div>
+          <div class="stat-label">Girls Registered</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">1+1</div>
+          <div class="stat-label">Max for Nationals</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Students Table Section -->
+    <div class="section-container">
+      <div class="section-title">All Registered Students</div>
+      <table class="students-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Marks (out of 100)</th>
+            <th>Going to Nationals</th>
+          </tr>
+        </thead>
+        <tbody id="studentsTableBody">
+          <tr><td colspan="4" class="empty-message">Loading students...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Finalists Section -->
+    <div class="section-container">
+      <div class="section-title">National Competition Finalists</div>
+      <div id="finalistsContainer">
+        <p class="empty-message">No finalists selected yet.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Pencil Royal. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/scroll-animations.js"></script>
+  <script>
+    let schoolData = null;
+
+    function safeShowLoader() {
+      try { if (typeof showLoader === 'function') showLoader(); } catch(e) { console.warn('safeShowLoader failed', e); }
+    }
+
+    function safeHideLoader() {
+      try { if (typeof hideLoader === 'function') hideLoader(); } catch(e) { console.warn('safeHideLoader failed', e); }
+    }
+
+    async function init() {
+      // ensure loader won't stick forever
+      const loaderTimeout = setTimeout(() => {
+        console.warn('Loader timeout reached — hiding loader');
+        safeHideLoader();
+        showAlert('error', 'Loading is taking longer than expected. Check console for errors.');
+      }, 8000);
+
+      try {
+        safeShowLoader();
+        const params = new URLSearchParams(window.location.search);
+        const schoolId = params.get('school');
+
+        if (!schoolId) {
+          safeHideLoader();
+          showAlert('error', 'School ID not provided');
+          window.location.href = 'schools.html';
+          clearTimeout(loaderTimeout);
+          return;
+        }
+
+        console.log('🔄 Loading school details for ID:', schoolId);
+        const sb = await getSupabase();
+
+        // Get school details - force fresh data with cache-busting
+        const { data: school, error: schoolError } = await sb
+          .from('schools')
+          .select('*')
+          .eq('id', schoolId)
+          .single();
+
+        if (schoolError || !school) {
+          console.error('❌ School not found error:', schoolError);
+          safeHideLoader();
+          showAlert('error', 'School not found');
+          window.location.href = 'schools.html';
+          clearTimeout(loaderTimeout);
+          return;
+        }
+
+        console.log('✅ School data loaded:', school);
+        schoolData = school;
+        document.getElementById('schoolName').textContent = school.name;
+        document.getElementById('schoolLocation').textContent = school.location || 'Not specified';
+        // Get students
+        console.log('🔎 Fetching students...');
+        let students = [];
+        try {
+          const resStudents = await sb
+            .from('students')
+            .select('*')
+            .eq('school_id', schoolId)
+            .order('name');
+
+          if (resStudents?.error) {
+            console.error('❌ Students query returned error object:', resStudents.error);
+            safeHideLoader();
+            showAlert('error', 'Failed to load students: ' + (resStudents.error.message || JSON.stringify(resStudents.error)));
+            clearTimeout(loaderTimeout);
+            return;
+          }
+
+          if (resStudents && resStudents.data) students = resStudents.data;
+          console.log('✅ Students fetched:', students?.length || 0);
+        } catch (e) {
+          console.error('❌ Students query failed (exception):', e);
+          safeHideLoader();
+          showAlert('error', 'Failed to load students (exception): ' + (e.message || e));
+          clearTimeout(loaderTimeout);
+          return;
+        }
+
+        // Normalize gender values: accept 'male'/'boy' and 'female'/'girl'
+        const boys = (students || []).filter(s => { const g = (s.gender||'').toLowerCase(); return g === 'boy' || g === 'male'; });
+        const girls = (students || []).filter(s => { const g = (s.gender||'').toLowerCase(); return g === 'girl' || g === 'female'; });
+
+        document.getElementById('boysCount').textContent = boys.length;
+        document.getElementById('girlsCount').textContent = girls.length;
+        document.getElementById('totalStudents').textContent = students?.length || 0;
+
+        // Get finalists (fetch raw rows, then map to student objects)
+        console.log('🔎 Fetching finalists...');
+        let finalists = [];
+        try {
+          const resFinalists = await sb
+            .from('finalists')
+            .select('*')
+            .eq('school_id', schoolId);
+
+          if (resFinalists?.error) {
+            console.error('❌ Finalists query returned error:', resFinalists.error);
+            finalists = [];
+          } else {
+            const rows = resFinalists.data || [];
+            // Map finalist rows to student objects using previously loaded `students`
+            const allStudents = students || [];
+            finalists = rows.map(r => {
+              const student = allStudents.find(s => String(s.id) === String(r.student_id));
+              return {
+                student_id: r.student_id,
+                score: r.score ?? scoresMap[String(r.student_id)],
+                student: student || { id: r.student_id, name: 'Unknown', gender: null }
+              };
+            }).filter(Boolean);
+          }
+          console.log('✅ Finalists fetched:', finalists?.length || 0);
+        } catch (e) {
+          console.error('❌ Finalists query failed (exception):', e);
+          finalists = [];
+        }
+
+        document.getElementById('finalistCount').textContent = finalists?.length || 0;
+
+        // Get competition scores
+        console.log('🔎 Fetching competition scores...');
+        let scoresData = [];
+        try {
+          const resScores = await sb
+            .from('competition_scores')
+            .select('student_id, score')
+            .eq('school_id', schoolId);
+          if (resScores && resScores.data) scoresData = resScores.data;
+          console.log('✅ Scores fetched:', scoresData?.length || 0);
+        } catch (e) {
+          console.error('❌ Scores query failed:', e);
+          scoresData = [];
+        }
+
+        const scoresMap = {};
+        if (scoresData) {
+          scoresData.forEach(s => {
+            scoresMap[String(s.student_id)] = s.score;
+          });
+        }
+
+        // Render students table
+        const tbody = document.getElementById('studentsTableBody');
+        if (!students || students.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="empty-message">No students registered yet</td></tr>';
+        } else {
+          const finalistIds = (finalists || []).map(f => String(f.students?.id)).filter(Boolean);
+          tbody.innerHTML = students.map(s => {
+            const g = (s.gender||'').toLowerCase();
+            const displayGender = (g === 'boy' || g === 'male') ? 'boy' : 'girl';
+            const genderLabel = displayGender === 'boy' ? '👦 Boy' : '👧 Girl';
+            const genderClass = `gender-${displayGender}`;
+
+            return `
+            <tr>
+              <td>${s.name}</td>
+              <td>
+                <span class="gender-badge ${genderClass}">
+                  ${genderLabel}
+                </span>
+              </td>
+              <td style="text-align: center; font-weight: 600; color: ${scoresMap[String(s.id)] ? '#27ae60' : '#999'};">
+                ${scoresMap[String(s.id)] !== undefined ? scoresMap[String(s.id)] + '/100' : '-'}
+              </td>
+              <td>
+                ${finalistIds.includes(String(s.id)) ? '<span class="finalist-badge">🥇 FINALIST</span>' : '-'}
+              </td>
+            </tr>
+          `}).join('');
+        }
+
+        // Render finalists with scores (use mapped finalist objects)
+        if (finalists && finalists.length > 0) {
+          const finalistsHtml = finalists.map(f => `
+            <div class="finalist-card">
+              <div>
+                <div class="finalist-name">${f.student?.name || 'Unknown'}</div>
+                <div class="finalist-gender">${(f.student?.gender||'').toLowerCase() === 'boy' || (f.student?.gender||'').toLowerCase() === 'male' ? 'Boy Finalist' : 'Girl Finalist'}</div>
+                <div style="font-size: 13px; color: #27ae60; font-weight: 600; margin-top: 5px;">
+                  Score: ${f.score !== undefined ? (f.score + '/100') : (scoresMap[String(f.student_id)] !== undefined ? (scoresMap[String(f.student_id)] + '/100') : 'Not scored yet')}
+                </div>
+              </div>
+              <span class="finalist-badge">NATIONALS</span>
+            </div>
+          `).join('');
+          document.getElementById('finalistsContainer').innerHTML = finalistsHtml;
+        } else {
+          document.getElementById('finalistsContainer').innerHTML = '<p class="empty-message">No finalists selected yet.</p>';
+        }
+
+        // Display school picture if available
+        if (school.profile_pic) {
+          console.log('Displaying school picture (raw):', school.profile_pic);
+          try {
+            let imgSrc = school.profile_pic;
+
+            // If the stored value is not a URL or data URI, treat it as a storage key and ask Supabase for a public URL
+            if (!/^https?:\/\//i.test(imgSrc) && !imgSrc.startsWith('data:')) {
+              try {
+                const { data: publicUrlData, error: publicErr } = await sb.storage
+                  .from('school-logos')
+                  .getPublicUrl(imgSrc);
+                if (!publicErr && publicUrlData && publicUrlData.publicUrl) {
+                  imgSrc = publicUrlData.publicUrl;
+                } else {
+                  console.warn('Could not resolve storage public URL, using stored value', publicErr);
+                }
+              } catch (e) {
+                console.warn('Storage getPublicUrl failed:', e);
+              }
+            }
+
+            // validate imgSrc and append cache buster safely
+            function safeSrc(url) {
+              if (!url || typeof url !== 'string') return null;
+              if (url.startsWith('data:')) return url; // data URIs don't need cache buster
+              // avoid double ?
+              return url + (url.indexOf('?') === -1 ? `?t=${Date.now()}` : `&t=${Date.now()}`);
+            }
+            const finalSrc = safeSrc(imgSrc);
+            if (finalSrc) {
+              document.getElementById('schoolPic').innerHTML = `<img src="${finalSrc}" alt="${school.name}" onerror="this.src='assets/img/logo.png'">`;
+            } else {
+              document.getElementById('schoolPic').innerHTML = `<img src="assets/img/logo.png" alt="${school.name}">`;
+            }
+          } catch (e) {
+            console.warn('Error rendering profile image:', e);
+            document.getElementById('schoolPic').innerHTML = `<img src="assets/img/logo.png" alt="${school.name}">`;
+          }
+        } else {
+          console.log('📭 No school picture in database');
+        }
+
+        safeHideLoader();
+        clearTimeout(loaderTimeout);
+        console.log('✅ School details page loaded successfully');
+      } catch (err) {
+        console.error('Error:', err);
+        safeHideLoader();
+        clearTimeout(loaderTimeout);
+        showAlert('error', 'Error loading school details: ' + (err.message || err));
+      }
+    }
+
+    // Initialize on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Setup School Profile - Pencil Royal</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .setup-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .setup-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .setup-header h1 {
+      color: #1a3c5e;
+      margin-bottom: 10px;
+    }
+    .setup-header p {
+      color: #666;
+      font-size: 16px;
+    }
+    .setup-form {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a3c5e;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ddd;
+    }
+    .profile-pic-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .profile-pic-box {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 15px;
+      border: 3px dashed #1a3c5e;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f4f8;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .profile-pic-box:hover {
+      border-color: #0d1f2d;
+      background: #e8ecf1;
+    }
+    .profile-pic-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .profile-pic-box.empty::before {
+      content: '📷';
+      font-size: 48px;
+      display: none;
+    }
+    .profile-pic-box.empty::after {
+      content: 'Upload Photo';
+      font-size: 14px;
+      color: #666;
+    }
+    .upload-hint {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .student-form-section {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .student-list {
+      margin-top: 20px;
+    }
+    .student-item {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #1a3c5e;
+    }
+    .student-info {
+      flex: 1;
+    }
+    .student-name {
+      font-weight: 600;
+      color: #1a3c5e;
+    }
+    .student-gender {
+      font-size: 12px;
+      color: #666;
+      margin-top: 3px;
+    }
+    .btn-remove {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .btn-remove:hover {
+      background: #c0392b;
+    }
+    .boys-count, .girls-count {
+      display: inline-block;
+      margin: 0 10px 0 0;
+      padding: 6px 12px;
+      background: #ecf0f1;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #1a3c5e;
+      font-weight: 600;
+    }
+    .boys-count::before {
+      content: 'Boys: ';
+    }
+    .girls-count::before {
+      content: 'Girls: ';
+    }
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+      justify-content: center;
+    }
+    .btn.secondary {
+      background: #ecf0f1;
+      color: #1a3c5e;
+    }
+    .btn.secondary:hover {
+      background: #d5dbdb;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .form-row-full {
+      grid-column: 1 / -1;
+    }
+    .alert-info {
+      background: #d1ecf1;
+      border: 1px solid #bee5eb;
+      color: #0c5460;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .tabs { display: flex; gap: 10px; margin: 30px 0 20px 0; border-bottom: 2px solid #ddd; }
+    .tab-btn { padding: 12px 20px; background: transparent; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+    .tab-btn.active { color: #1a3c5e; border-bottom-color: #1a3c5e; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .stat-box { background: #f0f4f8; padding: 15px; border-radius: 6px; text-align: center; }
+    .stat-number { font-size: 24px; font-weight: 600; color: #1a3c5e; }
+    .stat-label { font-size: 12px; color: #666; margin-top: 5px; }
+    .dashboard-view { display: none; }
+    .dashboard-view.active { display: block; }
+    .btn.small { padding: 6px 12px; font-size: 12px; }
+    .btn.danger { background: #e74c3c; color: white; }
+    .btn.danger:hover { background: #c0392b; }
+    .student-item { background: #f9fafb; padding: 15px; border-radius: 6px; border-left: 4px solid #1a3c5e; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .student-name { font-weight: 600; color: #1a3c5e; }
+    .student-gender { font-size: 12px; color: #666; margin-top: 3px; }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="setup-container">
+    <div id="setupView">
+      <div class="setup-header">
+        <h1>Complete Your School Profile</h1>
+        <p>Upload a profile picture and start adding your students</p>
+      </div>
+
+      <div class="setup-form" id="setupForm">
+      <div class="alert-info">
+        You can add a maximum of <strong>10 students</strong> (5 boys + 5 girls) per school. Deadline: <strong>October 2, 2026</strong>
+      </div>
+
+      <!-- Profile Picture Section -->
+      <div class="profile-pic-section">
+        <h3 style="margin-bottom: 15px; color: #1a3c5e;">School Profile Picture</h3>
+        <div class="profile-pic-box empty" id="profilePicBox">
+          <img id="profilePicImg" style="display: none;" />
+        </div>
+        <input type="file" id="profilePicInput" accept="image/*">
+        <p class="upload-hint">Click to upload a school logo or photo (JPG, PNG)</p>
+      </div>
+
+      <!-- School Info Section -->
+      <div class="section-title">School Information</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="schoolName">School Name</label>
+          <input type="text" id="schoolName" readonly />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" readonly />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="location">District / Location</label>
+          <input type="text" id="location" />
+        </div>
+      </div>
+
+      <!-- Student Management Section -->
+      <div class="section-title" style="margin-top: 30px;">Add Students</div>
+      <div class="student-form-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="studentName">Student Name</label>
+            <input type="text" id="studentName" placeholder="Full name" />
+          </div>
+          <div class="form-group">
+            <label for="studentGender">Gender</label>
+            <select id="studentGender">
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="btn primary" id="addStudentBtn" style="width: 100%;">+ Add Student</button>
+      </div>
+
+      <!-- Student List -->
+      <div id="studentList" class="student-list" style="display: none;">
+        <h4 style="color: #1a3c5e; margin-bottom: 15px;">
+          <span class="boys-count">0</span>
+          <span class="girls-count">0</span>
+        </h4>
+        <div id="studentsContainer"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button type="button" class="btn primary" id="completeBtn">Complete Setup</button>
+      </div>
+      </div>
+    </div>
+
+    <!-- Full Dashboard (shown after setup) -->
+    <div id="dashboardView" class="dashboard-view">
+      <!-- Tab Buttons -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="overview">Overview</button>
+        <button class="tab-btn" data-tab="profile">Profile Settings</button>
+        <button class="tab-btn" data-tab="students">Students</button>
+      </div>
+
+      <!-- TAB 1: Overview -->
+      <div id="overview" class="tab-content active">
+        <div class="setup-form">
+          <h2>School Statistics</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+            <div class="stat-box">
+              <div class="stat-number" id="totalStudents">0</div>
+              <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number" id="boysCount">0</div>
+              <div class="stat-label">Boys Registered</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number" id="girlsCount">0</div>
+              <div class="stat-label">Girls Registered</div>
+            </div>
+          </div>
+        </div>
+        <div class="setup-form" style="margin-top: 20px;">
+          <h2>National Competition Finalists</h2>
+          <div id="finalistsDisplay" style="margin-top: 15px;">
+            <p style="color: #666;">No finalists selected yet</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Profile Settings -->
+      <div id="profile" class="tab-content">
+        <div class="setup-form">
+          <h2>Edit School Profile</h2>
+          <form id="profileForm">
+            <input type="hidden" id="schoolId"/>
+            <div class="form-group">
+              <label for="profileName">School Name</label>
+              <input type="text" id="profileName" required/>
+            </div>
+            <div class="form-group">
+              <label for="profileLocation">District / Location</label>
+              <input type="text" id="profileLocation"/>
+            </div>
+            <div class="form-group">
+              <label for="contactPerson">Contact Person</label>
+              <input type="text" id="contactPerson"/>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone"/>
+            </div>
+            <button type="submit" class="btn primary">Save Profile</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- TAB 3: Students -->
+      <div id="students" class="tab-content">
+        <div class="setup-form">
+          <h2>Manage Students</h2>
+          <form id="dashboardStudentForm" style="margin-bottom: 30px;">
+            <input type="hidden" id="dashStudentId"/>
+            <div class="form-group">
+              <label for="dashStudentName">Student Name *</label>
+              <input type="text" id="dashStudentName" required/>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div class="form-group">
+                <label for="dashStudentGender">Gender *</label>
+                <select id="dashStudentGender" required>
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="dashStudentAge">Age</label>
+                <input type="number" id="dashStudentAge" min="5" max="20"/>
+              </div>
+            </div>
+            <button type="submit" class="btn primary">Add Student</button>
+          </form>
+
+          <h3>Registered Students</h3>
+          <div id="dashStudentsList"></div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/ui.js"></script>
+
+  <script>
+    let students = [];
+    let profilePicBase64 = null;
+    let currentSchool = null;
+    let allStudents = [];
+
+    // Try to get identifiers from cookie (set at signup) and populate from DB.
+    function getCookie(name) {
+      const v = document.cookie.match('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)');
+      return v ? decodeURIComponent(v[1]) : null;
+    }
+
+    let userId = null;
+    let schoolId = getCookie('pencil_school_id');
+    const cookieUser = getCookie('pencil_user_id');
+    const cookieEmail = getCookie('pencil_user_email');
+    if (cookieUser) userId = cookieUser;
+
+    async function populateFromCookieOrSession() {
+      try {
+        if (schoolId) {
+          const sb = await getSupabase();
+          const { data: school, error } = await sb.from('schools').select('id, name, location, user_id').eq('id', schoolId).single();
+          if (school) {
+            currentSchool = school;
+            userId = userId || school.user_id;
+            document.getElementById('schoolName').value = school.name || '';
+            document.getElementById('email').value = (cookieEmail || '');
+            document.getElementById('location').value = school.location || '';
+            return;
+          }
+        }
+
+        // Fallback to previous sessionStorage flow for compatibility
+        const schoolName = sessionStorage.getItem('newSchoolName');
+        const schoolEmail = sessionStorage.getItem('newSchoolEmail');
+        const schoolLocation = sessionStorage.getItem('newSchoolLocation');
+        const sessionUserId = sessionStorage.getItem('newSchoolUserId');
+        if (sessionUserId) userId = sessionUserId;
+        document.getElementById('schoolName').value = schoolName || '';
+        document.getElementById('email').value = schoolEmail || '';
+        document.getElementById('location').value = schoolLocation || '';
+      } catch (err) {
+        console.error('Error populating setup profile:', err);
+      }
+    }
+
+    populateFromCookieOrSession();
+
+    // Profile picture upload
+    document.getElementById('profilePicBox').addEventListener('click', () => {
+      document.getElementById('profilePicInput').click();
+    });
+
+    document.getElementById('profilePicInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          profilePicBase64 = event.target.result;
+          const img = document.getElementById('profilePicImg');
+          img.src = profilePicBase64;
+          img.style.display = 'block';
+          document.getElementById('profilePicBox').classList.remove('empty');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Add student
+    document.getElementById('addStudentBtn').addEventListener('click', () => {
+      const name = document.getElementById('studentName').value.trim();
+      const gender = document.getElementById('studentGender').value;
+
+      if (!name || !gender) {
+        showAlert('error', 'Please fill in all student fields');
+        return;
+      }
+
+      const boysCount = students.filter(s => s.gender === 'male').length;
+      const girlsCount = students.filter(s => s.gender === 'female').length;
+
+      if (gender === 'male' && boysCount >= 5) {
+        showAlert('error', 'Maximum 5 boys per school');
+        return;
+      }
+      if (gender === 'female' && girlsCount >= 5) {
+        showAlert('error', 'Maximum 5 girls per school');
+        return;
+      }
+
+      students.push({ id: Date.now(), name, gender });
+      document.getElementById('studentName').value = '';
+      document.getElementById('studentGender').value = '';
+      renderStudents();
+    });
+
+    function renderStudents() {
+      const boysCount = students.filter(s => s.gender === 'male').length;
+      const girlsCount = students.filter(s => s.gender === 'female').length;
+
+      document.querySelector('.boys-count').textContent = boysCount;
+      document.querySelector('.girls-count').textContent = girlsCount;
+
+      const container = document.getElementById('studentsContainer');
+      container.innerHTML = students.map(student => `
+        <div class="student-item">
+          <div class="student-info">
+            <div class="student-name">${student.name}</div>
+            <div class="student-gender">${student.gender === 'male' ? '👦 Boy' : '👧 Girl'}</div>
+          </div>
+          <button type="button" class="btn-remove" onclick="removeStudent(${student.id})">Remove</button>
+        </div>
+      `).join('');
+
+      if (students.length > 0) {
+        document.getElementById('studentList').style.display = 'block';
+      }
+    }
+
+    window.removeStudent = (id) => {
+      students = students.filter(s => s.id !== id);
+      renderStudents();
+    };
+
+    // Complete button - save and show dashboard
+    document.getElementById('completeBtn').addEventListener('click', () => {
+      saveAndShowDashboard();
+    });
+
+    async function saveAndShowDashboard() {
+      showLoader();
+      try {
+        const location = document.getElementById('location').value.trim();
+        // Determine or create the school record
+        let school = null;
+        const sb = await getSupabase();
+        if (currentSchool && currentSchool.id) {
+          school = currentSchool;
+        } else if (getCookie('pencil_school_id')) {
+          const { data: s } = await sb.from('schools').select('id, name, location, user_id').eq('id', getCookie('pencil_school_id')).single();
+          school = s || null;
+        } else if (userId) {
+          // Try to find existing school by user
+          const { data: s } = await sb.from('schools').select('id, name, location, user_id').eq('user_id', userId).single();
+          school = s || null;
+        }
+
+        if (!school) {
+          // Create it now
+          const created = await saveSchoolProfile(userId, document.getElementById('schoolName').value.trim(), location, profilePicBase64);
+          if (!created || !created.id) {
+            hideLoader();
+            showAlert('error', 'Failed to create school profile');
+            return;
+          }
+          school = created;
+        }
+
+        currentSchool = school;
+          
+        // Save students using the actual school ID
+        if (students.length > 0) {
+          for (const student of students) {
+            await sb.from('students').insert({ school_id: school.id, name: student.name, gender: student.gender });
+          }
+        }
+        
+        hideLoader();
+        showAlert('success', 'Profile setup complete!');
+        
+        // Redirect to school verification page
+        setTimeout(() => {
+          window.location.href = 'school-verification.html';
+        }, 1500);
+      } catch (error) {
+        hideLoader();
+        console.error('Error:', error);
+        showAlert('error', 'Error saving profile: ' + error.message);
+      }
+    }
+
+    function setupDashboardTabs() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.getElementById(btn.dataset.tab).classList.add('active');
+          btn.classList.add('active');
+        });
+      });
+
+      document.getElementById('profileForm').addEventListener('submit', handleProfileSubmit);
+      document.getElementById('dashboardStudentForm').addEventListener('submit', handleDashboardStudentSubmit);
+    }
+
+    async function loadProfileData() {
+      if (!currentSchool) return;
+
+      const sb = await getSupabase();
+      const { data: school } = await sb.from('schools').select('id, name, location, contact_person, phone').eq('id', currentSchool.id).single();
+      if (school) {
+        currentSchool = school;
+        document.getElementById('schoolId').value = school.id;
+        document.getElementById('profileName').value = school.name || '';
+        document.getElementById('profileLocation').value = school.location || '';
+        document.getElementById('contactPerson').value = school.contact_person || '';
+        document.getElementById('phone').value = school.phone || '';
+      }
+    }
+
+    async function loadStudentsData() {
+      if (!currentSchool) return;
+
+      const sb = await getSupabase();
+      const { data: fetchedStudents } = await sb.from('students').select('*').eq('school_id', currentSchool.id).order('name');
+      allStudents = fetchedStudents || [];
+      renderDashboardStudents();
+    }
+
+    function renderDashboardStudents() {
+      const list = document.getElementById('dashStudentsList');
+      if (allStudents.length === 0) {
+        list.innerHTML = '<p style="color: #666;">No students registered yet</p>';
+        return;
+      }
+
+      list.innerHTML = allStudents.map(student => `
+        <div class="student-item">
+          <div>
+            <div class="student-name">${student.name}</div>
+            <div class="student-gender">${student.gender === 'male' ? '👦 Boy' : '👧 Girl'} ${student.age ? `· Age ${student.age}` : ''}</div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn small primary" onclick="editStudent('${student.id}')">Edit</button>
+            <button class="btn small danger" onclick="deleteStudent('${student.id}')">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function handleDashboardStudentSubmit(e) {
+      e.preventDefault();
+      showLoader();
+      try {
+        const sb = await getSupabase();
+        const studentId = document.getElementById('dashStudentId').value;
+        const name = document.getElementById('dashStudentName').value.trim();
+        const gender = document.getElementById('dashStudentGender').value;
+        const age = document.getElementById('dashStudentAge').value;
+
+        if (!name || !gender) {
+          throw new Error('Name and gender are required');
+        }
+
+        // Count existing students by gender
+        const boyCount = allStudents.filter(s => s.gender === 'male' && (!studentId || s.id !== studentId)).length;
+        const girlCount = allStudents.filter(s => s.gender === 'female' && (!studentId || s.id !== studentId)).length;
+
+        if (!studentId && gender === 'male' && boyCount >= 5) {
+          throw new Error('Maximum 5 boys allowed per school');
+        }
+        if (!studentId && gender === 'female' && girlCount >= 5) {
+          throw new Error('Maximum 5 girls allowed per school');
+        }
+
+        if (studentId) {
+          await sb.from('students').update({ name, gender, age: age || null }).eq('id', studentId);
+        } else {
+          await sb.from('students').insert({ name, gender, age: age || null, school_id: currentSchool.id });
+        }
+
+        hideLoader();
+        showAlert('success', studentId ? 'Student updated!' : 'Student added!');
+        document.getElementById('dashboardStudentForm').reset();
+        document.getElementById('dashStudentId').value = '';
+        document.querySelector('#dashboardStudentForm button[type="submit"]').textContent = 'Add Student';
+        await loadStudentsData();
+        await loadOverviewData();
+      } catch (error) {
+        hideLoader();
+        showAlert('error', error.message);
+      }
+    }
+
+    function editStudent(studentId) {
+      const student = allStudents.find(s => s.id === studentId);
+      if (student) {
+        document.getElementById('dashStudentId').value = student.id;
+        document.getElementById('dashStudentName').value = student.name;
+        document.getElementById('dashStudentGender').value = student.gender;
+        document.getElementById('dashStudentAge').value = student.age || '';
+        document.querySelector('#dashboardStudentForm button[type="submit"]').textContent = 'Update Student';
+        document.getElementById('students').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    async function deleteStudent(studentId) {
+      if (!confirm('Are you sure you want to delete this student?')) return;
+      
+      showLoader();
+      try {
+        const sb = await getSupabase();
+        await sb.from('students').delete().eq('id', studentId);
+        hideLoader();
+        showAlert('success', 'Student deleted!');
+        await loadStudentsData();
+        await loadOverviewData();
+      } catch (error) {
+        hideLoader();
+        showAlert('error', 'Error deleting student: ' + error.message);
+      }
+    }
+
+    async function loadOverviewData() {
+      if (!currentSchool) return;
+
+      const sb = await getSupabase();
+      const { data: fetchedStudents } = await sb.from('students').select('*').eq('school_id', currentSchool.id);
+      const boyCount = fetchedStudents?.filter(s => s.gender === 'male').length || 0;
+      const girlCount = fetchedStudents?.filter(s => s.gender === 'female').length || 0;
+
+      document.getElementById('totalStudents').textContent = fetchedStudents?.length || 0;
+      document.getElementById('boysCount').textContent = boyCount;
+      document.getElementById('girlsCount').textContent = girlCount;
+
+      // Load finalists
+      const { data: finalists } = await sb.from('finalists').select('students(name, gender)').eq('school_id', currentSchool.id);
+      const finalistDisplay = document.getElementById('finalistsDisplay');
+      if (finalists && finalists.length > 0) {
+        finalistDisplay.innerHTML = finalists.map(f => `
+          <div style="padding: 10px; background: #f0f4f8; border-radius: 4px; margin-bottom: 8px;">
+            ${f.students.name} (${f.students.gender === 'male' ? '👦 Boy' : '👧 Girl'})
+          </div>
+        `).join('');
+      }
+    }
+
+    async function handleProfileSubmit(e) {
+      e.preventDefault();
+      showLoader();
+      try {
+        const sb = await getSupabase();
+        const schoolId = document.getElementById('schoolId').value;
+        const name = document.getElementById('profileName').value.trim();
+        const location = document.getElementById('profileLocation').value.trim();
+        const contactPerson = document.getElementById('contactPerson').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+
+        if (!name) {
+          hideLoader();
+          return showAlert('error', 'School name required');
+        }
+
+        const { error } = await sb.from('schools').update({ name, location, contact_person: contactPerson, phone }).eq('id', schoolId);
+        hideLoader();
+        
+        if (error) {
+          showAlert('error', 'Save failed: ' + error.message);
+        } else {
+          showAlert('success', 'Profile saved successfully!');
+          setTimeout(() => {
+            loadProfileData();
+          }, 500);
+        }
+      } catch (error) {
+        hideLoader();
+        showAlert('error', 'Error: ' + error.message);
+      }
+    }
+
+    window.editStudent = editStudent;
+    window.deleteStudent = deleteStudent;
+  </script>
+</body>
+</html>

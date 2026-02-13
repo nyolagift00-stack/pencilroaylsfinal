@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "school_id": "1",
+    "name": "John Doe",
+    "gender": "boy"
+  },
+  {
+    "id": "2",
+    "school_id": "1",
+    "name": "Jane Doe",
+    "gender": "girl"
+  }
+]

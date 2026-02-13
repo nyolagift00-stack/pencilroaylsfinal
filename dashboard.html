@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Dashboard - Pencil Royal</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="logo">
+        <img src="assets/img/image_1_1770974646527.jpg" alt="Pencil Royals Logo" class="logo-img">
+        <img src="assets/img/logo.jpg" alt="Pencil Royals Seal" class="logo-img">
+      </div>
+      <button class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="navMenu" class="nav-menu">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="students.html">Students</a>
+        <a href="intercompitions.html">Internal Comps</a>
+        <a href="profile.html">Profile</a>
+        <button id="logoutBtn" class="btn outline">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container dashboard">
+    <h1>Welcome back, <span id="schoolName">School</span></h1>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <h3>🚀 Quick Actions</h3>
+        </div>
+        <ul class="quick-links">
+          <li><a href="students.html" class="btn outline">Manage Students</a></li>
+          <li><a href="profile.html" class="btn outline">Update School Profile</a></li>
+          <li><a href="competition/overview.html" class="btn outline">Competition Info</a></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>📊 Competition Status</h3>
+        </div>
+        <div class="status-content">
+          <div class="status-item">
+            <span class="status-label">Registration Deadline:</span>
+            <span class="status-value">2 October 2026</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Registered Students:</span>
+            <span class="status-value" id="studentsCount">0</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Status:</span>
+            <span class="status-value status-open" id="deadlineStatus">Registrations are open</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-2">
+      <div class="card-header">
+        <h3>✅ Next Steps</h3>
+      </div>
+      <ol class="next-steps-list">
+        <li><span class="step-number">1</span> Complete your school profile</li>
+        <li><span class="step-number">2</span> Register up to 10 students (5 boys, 5 girls)</li>
+        <li><span class="step-number">3</span> Wait for admin approval</li>
+        <li><span class="step-number">4</span> Follow updates on the competition page</li>
+      </ol>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>
+    // Ensure functions are defined before initializing
+    ensureReady().then(async () => {
+      await protectPage();
+      document.getElementById('logoutBtn').addEventListener('click', logout);
+      loadDashboard();
+    }).catch(err => {
+      console.error('Init error:', err);
+      showAlert('error', 'Error loading page: ' + err.message);
+    });
+
+    async function loadDashboard() {
+      const user = await getCurrentUser();
+      if (!user) return;
+
+      const sb = await getSupabase();
+      
+      // Get the school record for this user (user_id = auth user id)
+      const { data: school } = await sb.from('schools').select('id, name').eq('user_id', user.id).single();
+      if (!school) {
+        console.error('School not found for user:', user.id);
+        document.getElementById('schoolName').textContent = 'School';
+        return;
+      }
+      
+      document.getElementById('schoolName').textContent = school.name;
+
+      // Get students for this school using the school.id
+      const { data: studentsList, count } = await sb.from('students').select('*', { count: 'exact' }).eq('school_id', school.id);
+      document.getElementById('studentsCount').textContent = count || 0;
+
+      // Display all registered students
+      const studentsContainer = document.createElement('div');
+      if (studentsList && studentsList.length > 0) {
+        const boysCount = studentsList.filter(s => s.gender === 'boy').length;
+        const girlsCount = studentsList.filter(s => s.gender === 'girl').length;
+
+        studentsContainer.innerHTML = `
+          <div class="card">
+            <div class="card-header">
+              <h3>Registered Students</h3>
+            </div>
+            <div class="students-grid">
+              ${studentsList.map(s => `
+                <div class="student-card">
+                  <div class="student-name">${s.name}</div>
+                  <div class="student-gender">
+                    ${s.gender === 'boy' ? '👦 Boy' : '👧 Girl'}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="students-summary">
+              <strong>Summary:</strong> ${boysCount} boy${boysCount !== 1 ? 's' : ''} • ${girlsCount} girl${girlsCount !== 1 ? 's' : ''}
+            </div>
+          </div>
+        `;
+      } else {
+        studentsContainer.innerHTML = `
+          <div class="card">
+            <p class="no-students-text">No students registered yet. <a href="students.html" class="no-students-link">Add students now</a></p>
+          </div>
+        `;
+      }
+      
+      const mainElement = document.querySelector('main');
+      mainElement.insertBefore(studentsContainer, mainElement.lastChild);
+
+      const deadline = new Date('2026-10-02');
+      document.getElementById('deadlineStatus').textContent = new Date() > deadline ? 'Registrations closed' : 'Registrations are open';
+
+      // Hamburger Menu Toggle
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const navMenu = document.getElementById('navMenu');
+      
+      if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', function() {
+          hamburgerBtn.classList.toggle('active');
+          navMenu.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked
+        const navLinks = navMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            hamburgerBtn.classList.remove('active');
+            navMenu.classList.remove('active');
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+          const isClickInsideMenu = navMenu.contains(event.target);
+          const isClickOnHamburger = hamburgerBtn.contains(event.target);
+          
+          if (!isClickInsideMenu && !isClickOnHamburger && navMenu.classList.contains('active')) {
+            hamburgerBtn.classList.remove('active');
+            navMenu.classList.remove('active');
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

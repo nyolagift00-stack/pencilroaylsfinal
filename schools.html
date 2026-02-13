@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registered Schools - Pencil Royal</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <img src="assets/img/logo.jpg" alt="Pencil Royals Logo" style="height: 50px; width: auto; object-fit: contain; margin-right: 12px;">
+        <span style="vertical-align: middle; font-size: 20px;">Pencil Royals</span>
+      </div>
+      <button class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="navMenu" class="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="competition/overview.html">Competition rules</a>
+        <a href="schools.html" class="active">Schools</a>
+        <a href="results.html">Results</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html" class="btn primary">Register School</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1><i class="fas fa-school" style="margin-right: 10px; color: var(--primary-gold);"></i>All Registered Schools</h1>
+    <p>This page lists all approved schools participating in the competition.</p>
+
+    <!-- PNG Illustration Space 1 -->
+    <section class="illustration-space" style="padding: 50px 0;">
+      <div style="display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px; text-align: center;">
+          <div class="illustration-placeholder" id="pngIllustration1">
+            <img src="assets/illustrations/undraw_artist_7bs7.png" alt="Schools Overview" style="max-width: 100%; height: auto; border-radius: 12px;">
+          </div>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+          <h3 style="color: #1a3c5e; font-size: 28px; margin-bottom: 20px; font-weight: 600;">Discover Partner Schools</h3>
+          <p style="color: #555; font-size: 16px; line-height: 1.8; margin-bottom: 15px;">
+            Explore our network of leading educational institutions from across the nation. Each school has been carefully selected to participate in Pencil Royals, bringing their brightest students to compete at the highest levels.
+          </p>
+          <ul style="color: #555; font-size: 15px; line-height: 2; margin-bottom: 20px; list-style-position: inside;">
+            <li>Verified and accredited institutions</li>
+            <li>Diverse geographic representation</li>
+            <li>Commitment to student excellence</li>
+            <li>Active participation in nationals</li>
+          </ul>
+          <p style="color: #555; font-size: 15px; line-height: 1.8;">
+            Search for schools by name or location below to see their student representatives and competition achievements.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <input type="text" id="searchInput" placeholder="Search by name or location..." class="search-bar">
+    <ul id="schoolList" class="school-list mt-2"></ul>
+
+    <!-- PNG Illustration Space 2 -->
+    <section class="illustration-space" style="padding: 50px 0;">
+      <div style="display: flex; align-items: center; gap: 50px; flex-wrap: wrap; flex-direction: row-reverse;">
+        <div style="flex: 1; min-width: 300px; text-align: center;">
+          <div class="illustration-placeholder" id="pngIllustration2">
+            <img src="assets/illustrations/undraw_art_odou.png" alt="School Participation" style="max-width: 100%; height: auto; border-radius: 12px;">
+          </div>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+          <h3 style="color: #1a3c5e; font-size: 28px; margin-bottom: 20px; font-weight: 600;">School Participation & Impact</h3>
+          <p style="color: #555; font-size: 16px; line-height: 1.8; margin-bottom: 15px;">
+            By joining Pencil Royals, schools provide their students with an unparalleled platform to showcase talent, develop leadership skills, and build lasting connections with peers from across the nation.
+          </p>
+          <ul style="color: #555; font-size: 15px; line-height: 2; margin-bottom: 20px; list-style-position: inside;">
+            <li>Student-centered competition model</li>
+            <li>Recognition of school achievements</li>
+            <li>Networking opportunities nationwide</li>
+            <li>Prize awards and certificates</li>
+          </ul>
+          <p style="color: #555; font-size: 15px; line-height: 1.8;">
+            Each participating school sends selected students to represent their institution and compete for national honors in various categories.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/scroll-animations.js"></script>
+  <script>
+    // Load schools - PUBLIC ACCESS
+    async function loadSchools() {
+      try {
+        const list = document.getElementById('schoolList');
+        list.innerHTML = '<p style="text-align: center; color: #666;">Loading schools...</p>';
+        // Create Supabase client directly
+        const SUPABASE_URL = 'https://tjooofnjwwtgageayezr.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqb29vZm5qd3d0Z2FnZWF5ZXpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NTI1NDIsImV4cCI6MjA4NjAyODU0Mn0.Pg8ldP8qI6e70WNGNzdnAbMmgAlL1rb6w41sGjXFc9Y';
+        
+        const { createClient } = window.supabase;
+        const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Query schools
+        const { data: schools, error } = await sb
+          .from('schools')
+          .select('*')
+          .order('name');
+        
+        console.log('Schools query result:');
+        console.log('- Data:', schools);
+        console.log('- Error:', error);
+        
+        if (error) {
+          console.error('Error details:', error);
+          list.innerHTML = `
+            <div style="padding: 20px; background: #ffe6e6; border-radius: 4px; border-left: 4px solid #dc3545;">
+              <p><strong>Error Loading Schools</strong></p>
+              <p style="color: #666; font-size: 14px; margin: 10px 0;">
+                ${error.message}
+              </p>
+              <details style="margin-top: 15px;">
+                <summary style="cursor: pointer; color: #1a3c5e; font-weight: 600;">Database Error Details</summary>
+                <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px; font-size: 12px; overflow-x: auto; margin-top: 10px;">${JSON.stringify(error, null, 2)}</pre>
+              </details>
+            </div>
+          `;
+          return;
+        }
+        
+        if (!schools || schools.length === 0) {
+          list.innerHTML = `
+            <div style="padding: 20px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #ffc107;">
+              <p><strong>No Schools Yet</strong></p>
+              <p style="color: #666; font-size: 14px;">No schools have registered. Check back soon!</p>
+              <p style="margin-top: 15px;">
+                <a href="signup.html" class="btn primary" style="padding: 8px 16px; background: #1a3c5e; color: white; text-decoration: none; border-radius: 4px; font-weight: 600; display: inline-block;">Register Your School</a>
+              </p>
+            </div>
+          `;
+          return;
+        }
+        
+        // Render schools
+        list.innerHTML = '';
+        schools.forEach(school => {
+          const li = document.createElement('li');
+          li.style.cursor = 'pointer';
+          li.style.transition = 'background 0.2s ease';
+          li.style.padding = '15px';
+          li.style.marginBottom = '10px';
+          li.style.background = 'white';
+          li.style.borderRadius = '6px';
+          li.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+          
+          li.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="flex: 1;">
+                <strong style="font-size: 16px; color: #1a3c5e;">${school.name || 'Unknown'}</strong>
+                <div style="font-size: 14px; color: #666; margin-top: 4px;">${school.location || 'Location TBA'}</div>
+                <div style="font-size: 12px; color: #999; margin-top: 6px;">
+                  Status: <span style="color: ${school.approved ? '#27ae60' : '#e74c3c'}; font-weight: 600;">
+                    ${school.approved ? 'Approved' : 'Pending'}
+                  </span>
+                </div>
+              </div>
+              <a href="school-detail.html?school=${school.id}" style="padding: 8px 16px; background: #1a3c5e; color: white; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 12px;">
+                View Details
+              </a>
+            </div>
+          `;
+          
+          li.addEventListener('mouseenter', () => li.style.background = '#f0f4f8');
+          li.addEventListener('mouseleave', () => li.style.background = 'white');
+          
+          list.appendChild(li);
+        });
+        
+        console.log('Loaded ' + schools.length + ' schools');
+        
+      } catch (err) {
+        console.error('Exception:', err);
+        document.getElementById('schoolList').innerHTML = `
+          <p style="color: red; padding: 20px; background: #ffe6e6; border-radius: 4px;">
+            <strong>Error:</strong> ${err.message}
+          </p>
+        `;
+      }
+    }
+    
+    // Load schools when page loads
+    window.addEventListener('load', loadSchools);
+
+    // Hamburger Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', function() {
+        hamburgerBtn.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+
+      // Close menu when a link is clicked
+      const navLinks = navMenu.querySelectorAll('a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const isClickInsideMenu = navMenu.contains(event.target);
+        const isClickOnHamburger = hamburgerBtn.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnHamburger && navMenu.classList.contains('active')) {
+          hamburgerBtn.classList.remove('active');
+          navMenu.classList.remove('active');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

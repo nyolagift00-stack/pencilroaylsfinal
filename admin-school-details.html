@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Edit School Details - Pencil Royal</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <style>
+    .details-container {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .details-header {
+      background: linear-gradient(135deg, #1a3c5e 0%, #0d1f2d 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .details-header h1 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #1a3c5e;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #1a3c5e;
+      box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.1);
+    }
+
+    .image-preview {
+      margin: 15px 0;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f0f4f8;
+      border: 2px solid #ddd;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .image-input-label {
+      display: block;
+      cursor: pointer;
+      padding: 12px;
+      background: #f0f4f8;
+      border: 2px dashed #1a3c5e;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+      color: #1a3c5e;
+      transition: all 0.3s ease;
+    }
+
+    .image-input-label:hover {
+      background: #e6ecf4;
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .btn.primary {
+      background: #1a3c5e;
+      color: white;
+    }
+
+    .btn.primary:hover {
+      background: #0d1f2d;
+    }
+
+    .btn.secondary {
+      background: #999;
+      color: white;
+    }
+
+    .btn.secondary:hover {
+      background: #777;
+    }
+
+    .info-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .modal-content h2 {
+      margin: 0 0 15px 0;
+      color: #1a3c5e;
+    }
+
+    .modal-content p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="logo">Pencil Royal</div>
+      <nav>
+        <a href="admin-panel.html">← Back to Admin Panel</a>
+        <button id="logoutBtn" class="btn outline">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="details-container">
+      <div class="details-header">
+        <h1 id="pageTitle">Loading...</h1>
+        <p style="margin: 5px 0 0 0; opacity: 0.9;">Edit school information</p>
+      </div>
+
+      <form id="detailsForm">
+        <!-- School Name -->
+        <div class="form-group">
+          <label for="schoolName">School Name *</label>
+          <input type="text" id="schoolName" name="schoolName" required placeholder="Enter school name">
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="location">Location *</label>
+          <input type="text" id="location" name="location" required placeholder="Enter school location (city, state)">
+        </div>
+
+        <!-- School Image -->
+        <div class="form-group">
+          <label>School Logo/Image</label>
+          <label for="imageInput" class="image-input-label">
+            Click here to upload image
+          </label>
+          <input type="file" id="imageInput" accept="image/*">
+          <p class="info-text">Recommended size: 400x400px. Max 5MB. Supports JPG, PNG, GIF</p>
+          
+          <div id="imagePreviewContainer" style="display: none;">
+            <p style="margin-top: 15px; color: #666; font-size: 14px;">Preview:</p>
+            <div class="image-preview">
+              <img id="previewImage" src="" alt="Preview">
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button type="submit" class="btn primary">Save Changes</button>
+          <button type="button" class="btn secondary" onclick="window.location.href='admin-panel.html'">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h2>Changes Saved</h2>
+      <p id="confirmMessage">School details have been updated successfully!</p>
+      <div class="modal-buttons">
+        <button class="btn primary" onclick="window.location.href='admin-panel.html'">Go to Admin Panel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>
+    let schoolId = null;
+    let schoolData = null;
+
+    async function init() {
+      try {
+        // Check authentication
+        const user = await getCurrentUser();
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Check if user is admin using the new role-based system
+        const isAdmin = await isUserAdmin(user.id);
+
+        if (!isAdmin) {
+          document.body.innerHTML = `
+            <div style="max-width: 600px; margin: 50px auto; padding: 30px; background: #ffe6e6; border-radius: 8px; border-left: 4px solid #dc3545;">
+              <h2 style="color: #dc3545; margin: 0 0 15px 0;">❌ Access Denied</h2>
+              <p style="color: #666;">You don't have permission to edit school details.</p>
+              <button onclick="logout()" style="margin-top: 20px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+            </div>
+          `;
+          return;
+        }
+
+        // Get school ID from URL
+        const params = new URLSearchParams(window.location.search);
+        schoolId = params.get('school');
+
+        if (!schoolId) {
+          showAlert('error', 'School ID not provided');
+          window.location.href = 'admin-panel.html';
+          return;
+        }
+
+        const sb = await getSupabase();
+
+        // Load school details
+        const { data: school, error } = await sb
+          .from('schools')
+          .select('*')
+          .eq('id', schoolId)
+          .single();
+
+        if (error || !school) {
+          showAlert('error', 'School not found');
+          window.location.href = 'admin-panel.html';
+          return;
+        }
+
+        schoolData = school;
+        document.getElementById('pageTitle').textContent = `✏️ Edit: ${school.name}`;
+        document.getElementById('schoolName').value = school.name || '';
+        document.getElementById('location').value = school.location || '';
+
+        // Helper: resolve storage key to usable URL (public or signed)
+        async function resolveStorageUrl(sbClient, storageKey) {
+          if (!storageKey) return null;
+          if (/^https?:\/\//i.test(storageKey) || storageKey.startsWith('data:')) return storageKey;
+
+          try {
+            const { data: publicUrlData, error: publicErr } = await sbClient.storage
+              .from('school-logos')
+              .getPublicUrl(storageKey);
+            if (!publicErr && publicUrlData?.publicUrl) {
+              // test that the URL is reachable
+              try {
+                const resp = await fetch(publicUrlData.publicUrl, { method: 'HEAD' });
+                if (resp.ok) return publicUrlData.publicUrl;
+              } catch (e) {
+                // continue to signed URL fallback
+                console.warn('Public URL exists but fetch failed:', e);
+              }
+            }
+
+            // Fallback: try creating a signed URL (short-lived)
+            try {
+              const { data: signedData, error: signedErr } = await sbClient.storage
+                .from('school-logos')
+                .createSignedUrl(storageKey, 60);
+              if (!signedErr && signedData?.signedUrl) {
+                return signedData.signedUrl;
+              }
+            } catch (e) {
+              console.warn('createSignedUrl failed:', e);
+            }
+          } catch (e) {
+            console.warn('resolveStorageUrl error:', e);
+          }
+          return null;
+        }
+
+        // Show preview if image exists
+        if (school.profile_pic) {
+          try {
+            const previewResolved = await resolveStorageUrl(sb, school.profile_pic);
+            if (previewResolved) {
+              document.getElementById('previewImage').src = previewResolved;
+              document.getElementById('imagePreviewContainer').style.display = 'block';
+            } else {
+              console.warn('Could not resolve any usable URL for profile_pic:', school.profile_pic);
+            }
+          } catch (e) {
+            console.warn('Preview render failed:', e);
+          }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('detailsForm').addEventListener('submit', saveDetails);
+        document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+      } catch (err) {
+        console.error('Init error:', err);
+        showAlert('error', 'Error: ' + err.message);
+      }
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        showAlert('error', 'Image too large. Max 5MB allowed.');
+        return;
+      }
+
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('previewImage').src = e.target.result;
+        document.getElementById('imagePreviewContainer').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function saveDetails(event) {
+      event.preventDefault();
+
+      try {
+        showLoader();
+        const sb = await getSupabase();
+
+        const name = document.getElementById('schoolName').value.trim();
+        const location = document.getElementById('location').value.trim();
+
+        if (!name || !location) {
+          hideLoader();
+          showAlert('error', 'Name and Location are required');
+          return;
+        }
+
+        // Determine image URL to save
+        let profilePicUrl = schoolData.profile_pic; // Keep existing if no new upload
+
+        // Check if new image was uploaded
+        const imageInput = document.getElementById('imageInput');
+        if (imageInput.files.length > 0) {
+          const file = imageInput.files[0];
+          // preserve extension to help storage/mime
+          const extMatch = (file.name || '').match(/\.([a-zA-Z0-9]+)$/);
+          const ext = extMatch ? '.' + extMatch[1] : '';
+          const fileName = `school-${schoolId}-${Date.now()}${ext}`;
+          
+          try {
+            // Upload to Supabase Storage; store the storage key in DB (not the public URL)
+            const { data, error: uploadError } = await sb.storage
+              .from('school-logos')
+              .upload(fileName, file, { upsert: true });
+
+            console.log('Upload response:', { data, uploadError });
+            if (uploadError) {
+              console.warn('⚠️ Image upload failed:', uploadError.message || uploadError);
+              // Continue without image - don't block the save
+            } else {
+              // Save the storage key (fileName) to DB so public URLs can be resolved later
+              profilePicUrl = fileName;
+              console.log('✅ Image uploaded, storage key saved:', profilePicUrl);
+
+              // Resolve a usable preview URL (public or signed)
+              try {
+                const resolved = await resolveStorageUrl(sb, fileName);
+                if (resolved) {
+                  document.getElementById('previewImage').src = resolved;
+                  document.getElementById('imagePreviewContainer').style.display = 'block';
+                } else {
+                  console.warn('Could not resolve preview URL after upload');
+                }
+              } catch (e) {
+                console.warn('Could not get preview URL for uploaded file:', e);
+              }
+            }
+          } catch (imgErr) {
+            console.warn('⚠️ Image upload error:', imgErr.message);
+            // Continue without image
+          }
+        }
+
+        console.log('🔄 Saving to database:', { schoolId, name, location, profilePicUrl });
+
+        // Update school in database
+        const { error, data: updateData } = await sb
+          .from('schools')
+          .update({
+            name,
+            location,
+            profile_pic: profilePicUrl
+          })
+          .eq('id', schoolId)
+          .select();
+
+        if (error) {
+          hideLoader();
+          console.error('❌ Database update error:', error);
+          showAlert('error', 'Failed to save: ' + error.message + '. Make sure your school ID is correct.');
+          return;
+        }
+
+        hideLoader();
+        console.log('✅ School details updated successfully:', updateData);
+        showAlert('success', '✅ Changes saved! Redirecting...');
+        
+        // Redirect to school-detail.html with a hard refresh to clear cache
+        const redirectUrl = `school-detail.html?school=${schoolId}&t=${Date.now()}`;
+        console.log('🔄 Redirecting to:', redirectUrl);
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 1000);
+      } catch (err) {
+        hideLoader();
+        console.error('❌ Save error:', err);
+        showAlert('error', 'Failed to save: ' + err.message);
+      }
+    }
+
+    // Initialize on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

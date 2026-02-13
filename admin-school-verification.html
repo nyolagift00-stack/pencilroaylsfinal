@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Verification - Admin Panel</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <style>
+        .verification-panel {
+            padding: 20px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .panel-header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .refresh-btn:hover {
+            background: #5568d3;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-section select {
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filter-section select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .verification-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .verification-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .verification-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .verification-card.pending {
+            border-left: 5px solid #ffc107;
+        }
+
+        .verification-card.approved {
+            border-left: 5px solid #28a745;
+            background: #f0fdf4;
+        }
+
+        .verification-card.rejected {
+            border-left: 5px solid #dc3545;
+            background: #fdf8f8;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            flex: 1;
+        }
+
+        .card-title h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .card-title p {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .card-body {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .transaction-id {
+            font-family: monospace;
+            background: white;
+            padding: 8px;
+            border-radius: 3px;
+            word-break: break-all;
+        }
+
+        .notes-section {
+            margin-top: 15px;
+        }
+
+        .notes-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .debug-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .debug-button:hover {
+            background: #5a6268;
+        }
+
+        .debug-panel {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .debug-panel.show {
+            display: block;
+        }
+
+        .debug-panel h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .debug-output {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .debug-output.error {
+            background: #fff5f5;
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .debug-output.success {
+            background: #f5fff5;
+            color: #28a745;
+            border-color: #28a745;
+        }
+
+        .debug-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .debug-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .debug-btn-test {
+            background: #667eea;
+            color: white;
+        }
+
+        .debug-btn-test:hover {
+            background: #5568d3;
+        }
+
+        .debug-btn-clear {
+            background: #ddd;
+            color: #333;
+        }
+
+        .debug-btn-clear:hover {
+            background: #ccc;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="verification-panel">
+        <!-- Header -->
+        <div class="panel-header">
+            <div>
+                <h1>🔐 School Verification</h1>
+                <p style="color: #666; margin-top: 5px;">Review and approve school registrations</p>
+            </div>
+            <div>
+                <button class="refresh-btn" onclick="loadVerifications()">Refresh</button>
+                <button class="debug-button" onclick="toggleDebugPanel()">🔧 Debug</button>
+            </div>
+        </div>
+
+        <!-- Debug Panel -->
+        <div id="debugPanel" class="debug-panel">
+            <h3>🔍 Database Connection Debug</h3>
+            <div id="debugOutput" class="debug-output">Click "Test Connection" to start debugging...</div>
+            <div class="debug-buttons">
+                <button class="debug-btn debug-btn-test" onclick="testSupabaseConnection()">Test Connection</button>
+                <button class="debug-btn debug-btn-clear" onclick="clearDebugOutput()">Clear</button>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-section">
+            <label style="margin: 0; color: #666; font-weight: 600;">Filter by Status:</label>
+            <select id="statusFilter" onchange="filterVerifications()">
+                <option value="all">All</option>
+                <option value="pending" selected>Pending Only</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+            </select>
+        </div>
+
+        <!-- Content -->
+        <div id="loadingState">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading verifications...</p>
+            </div>
+        </div>
+
+        <div id="verificationContent" style="display: none;">
+            <div class="verification-list" id="verificationList"></div>
+            <div id="emptyState" style="display: none;">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <h3>No pending verifications</h3>
+                    <p>All schools have been reviewed!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-client.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        let allVerifications = [];
+        let currentUser = null;
+
+        async function init() {
+            try {
+                console.log('🔄 Initializing admin verification panel...');
+                
+                try {
+                    // Get Supabase instance (waits for library to load)
+                    console.log('⏳ Waiting for Supabase to load...');
+                    const supabase = await window.getSupabase();
+                    console.log('✅ Supabase loaded');
+
+                    // Protect admin page
+                    console.log('🔐 Checking admin access...');
+                    const protected = await window.protectAdminPage();
+                    if (!protected) {
+                        console.log('Access denied - not admin');
+                        return;
+                    }
+                    
+                    console.log('✅ Admin access confirmed');
+                    
+                    // Get current user
+                    const user = await window.getCurrentUser();
+                    if (!user) {
+                        console.log('⚠️ No user found, redirecting to login');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    currentUser = user;
+                    console.log('✅ User authenticated:', user.email);
+
+                    // Load verifications
+                    console.log('📋 Loading verifications...');
+                    await loadVerifications();
+                } catch (error) {
+                    console.error('❌ Init error:', error);
+                    showToast('Initialization error: ' + (error.message || 'Unknown error'), 'error');
+                }
+
+                // Always ensure content is shown
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('verificationContent').style.display = 'block';
+                
+            } catch (error) {
+                console.error('❌ Fatal init error:', error);
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('verificationContent').style.display = 'block';
+                showToast('Error: ' + (error.message || 'Failed to load'), 'error');
+            }
+        }
+
+        async function loadVerifications() {
+            try {
+                console.log('📋 Fetching verifications...');
+
+                try {
+                    // Get fresh Supabase instance
+                    const supabase = await window.getSupabase();
+                    
+                    console.log('   Querying school_verification table...');
+                    const { data: verifications, error } = await supabase
+                        .from('school_verification')
+                        .select(`
+                            *,
+                            schools:school_id (id, name, email, phone, created_at)
+                        `)
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        console.error('❌ Query error:', error.message);
+                        console.error('   Code:', error.code);
+                        console.error('   Details:', error.details);
+                        throw error;
+                    }
+
+                    if (!verifications) {
+                        console.log('⚠️ No verifications returned (null response)');
+                    }
+
+                    console.log('✅ Loaded verifications:', verifications?.length || 0);
+                    allVerifications = verifications || [];
+                } catch (queryError) {
+                    console.error('❌ Error querying verifications:', queryError);
+                    showToast('Error loading verifications: ' + (queryError.message || 'Unknown error'), 'error');
+                    allVerifications = [];
+                }
+                
+                filterVerifications();
+                
+            } catch (error) {
+                console.error('❌ Error in loadVerifications:', error);
+                showToast('Error loading verifications: ' + (error.message || 'Unknown error'), 'error');
+                allVerifications = [];
+                filterVerifications();
+            }
+        }
+
+        function filterVerifications() {
+            const status = document.getElementById('statusFilter').value;
+
+            const filtered = status === 'all'
+                ? allVerifications
+                : allVerifications.filter(v => v.verification_status === status);
+
+            displayVerifications(filtered);
+
+            // Show/hide empty state
+            if (filtered.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('verificationList').style.display = 'none';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('verificationList').style.display = 'grid';
+            }
+
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('verificationContent').style.display = 'block';
+        }
+
+        function displayVerifications(verifications) {
+            const list = document.getElementById('verificationList');
+            list.innerHTML = '';
+
+            verifications.forEach(verification => {
+                const school = verification.schools || { id: null, name: 'Unknown School', email: '-', phone: '-' };
+                const card = createVerificationCard(verification, school);
+                list.appendChild(card);
+            });
+        }
+
+        function createVerificationCard(verification, school) {
+            const card = document.createElement('div');
+            card.className = `verification-card ${verification.verification_status}`;
+            card.id = `card-${verification.id}`;
+
+            const statusText = verification.verification_status.charAt(0).toUpperCase() + 
+                             verification.verification_status.slice(1);
+
+            const createdDate = new Date(verification.created_at).toLocaleDateString();
+            const statusBadgeClass = `status-badge ${verification.verification_status}`;
+
+            let actionButtons = '';
+            if (verification.verification_status === 'pending') {
+                actionButtons = `
+                    <button class="btn btn-approve" onclick="approveVerification('${verification.id}', this)">
+                        Approve
+                    </button>
+                    <button class="btn btn-reject" onclick="openRejectDialog('${verification.id}')">
+                        Reject
+                    </button>
+                `;
+            }
+
+            let approvedInfo = '';
+            if (verification.verification_status === 'approved') {
+                const approvedDate = new Date(verification.verified_at).toLocaleDateString();
+                approvedInfo = `
+                    <div class="info-item">
+                        <span class="info-label">Approved Date</span>
+                        <span class="info-value">${approvedDate}</span>
+                    </div>
+                `;
+            }
+
+            let rejectionInfo = '';
+            if (verification.verification_status === 'rejected' && verification.admin_notes) {
+                rejectionInfo = `
+                    <div class="info-item full">
+                        <span class="info-label">Rejection Reason</span>
+                        <span class="info-value">${escapeHtml(verification.admin_notes)}</span>
+                    </div>
+                `;
+            }
+
+            let notesSection = '';
+            if (verification.verification_status === 'pending') {
+                notesSection = `
+                    <div class="notes-section">
+                        <label class="notes-label">Admin Notes (optional):</label>
+                        <textarea class="notes-textarea" id="notes-${verification.id}" placeholder="Enter notes about this verification..."></textarea>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3>${escapeHtml(school.name)}</h3>
+                        <p>Submitted: ${createdDate}</p>
+                    </div>
+                    <span class="${statusBadgeClass}">${statusText}</span>
+                </div>
+
+                <div class="card-body">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">School Email</span>
+                            <span class="info-value">${escapeHtml(school.email)}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone</span>
+                            <span class="info-value">${school.phone || '-'}</span>
+                        </div>
+                        ${approvedInfo}
+                    </div>
+
+                    ${verification.transaction_id ? `
+                        <div class="info-item full">
+                            <span class="info-label">Transaction ID</span>
+                            <span class="info-value transaction-id">${escapeHtml(verification.transaction_id)}</span>
+                        </div>
+                    ` : ''}
+
+                    ${notesSection}
+                </div>
+
+                ${actionButtons ? `
+                    <div class="card-footer">
+                        ${actionButtons}
+                    </div>
+                ` : ''}
+            `;
+
+            return card;
+        }
+
+        async function approveVerification(verificationId, button) {
+            try {
+                const supabase = await window.getSupabase();
+                const card = document.getElementById(`card-${verificationId}`);
+                const notes = card.querySelector('.notes-textarea')?.value || '';
+
+                button.disabled = true;
+                button.textContent = 'Approving...';
+
+                const { error } = await supabase
+                    .from('school_verification')
+                    .update({
+                        verification_status: 'approved',
+                        verified_at: new Date().toISOString(),
+                        admin_notes: notes || null
+                    })
+                    .eq('id', verificationId);
+
+                if (error) throw error;
+
+                showToast('School verified successfully!', 'success');
+                await loadVerifications();
+
+            } catch (error) {
+                console.error('Error approving verification:', error);
+                showToast('Error approving verification', 'error');
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Approve';
+                }
+            }
+        }
+
+        function openRejectDialog(verificationId) {
+            const card = document.getElementById(`card-${verificationId}`);
+            const notes = card.querySelector('.notes-textarea');
+            
+            if (!notes.value.trim()) {
+                alert('Please enter a reason for rejection in the notes field');
+                return;
+            }
+
+            if (confirm('Are you sure you want to reject this verification?')) {
+                rejectVerification(verificationId, notes.value);
+            }
+        }
+
+        async function rejectVerification(verificationId, reason) {
+            try {
+                const supabase = await window.getSupabase();
+                const button = event?.target || document.querySelector(`button[onclick*="${verificationId}"]`);
+                if (button) button.disabled = true;
+
+                const { error } = await supabase
+                    .from('school_verification')
+                    .update({
+                        verification_status: 'rejected',
+                        admin_notes: reason
+                    })
+                    .eq('id', verificationId);
+
+                if (error) throw error;
+
+                showToast('School verification rejected', 'success');
+                await loadVerifications();
+
+            } catch (error) {
+                console.error('Error rejecting verification:', error);
+                showToast('Error rejecting verification', 'error');
+            }
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ========================================
+        // DEBUG FUNCTIONS
+        // ========================================
+
+        function toggleDebugPanel() {
+            const panel = document.getElementById('debugPanel');
+            panel.classList.toggle('show');
+        }
+
+        function addDebugOutput(message, isError = false) {
+            const output = document.getElementById('debugOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = isError ? '❌' : '✅';
+            const newLine = `[${timestamp}] ${prefix} ${message}\n`;
+            output.textContent += newLine;
+            
+            // Update styling
+            output.classList.remove('success');
+            if (isError) {
+                output.classList.add('error');
+            } else {
+                output.classList.add('success');
+            }
+            
+            // Auto-scroll to bottom
+            output.scrollTop = output.scrollHeight;
+            
+            console.log(message);
+        }
+
+        function clearDebugOutput() {
+            const output = document.getElementById('debugOutput');
+            output.textContent = 'Debug output cleared. Click "Test Connection" to start a new test...\n';
+            output.classList.remove('error', 'success');
+        }
+
+        async function testSupabaseConnection() {
+            clearDebugOutput();
+            addDebugOutput('Starting database connection test...');
+
+            try {
+                // Test 1: Check if Supabase library is available
+                addDebugOutput('Test 1: Checking Supabase library...');
+                if (!window.getSupabase) {
+                    throw new Error('window.getSupabase function not found');
+                }
+                addDebugOutput('✓ Supabase functions available');
+
+                // Test 2: Initialize Supabase
+                addDebugOutput('Test 2: Initializing Supabase...');
+                const testSupabase = await window.getSupabase();
+                if (!testSupabase) {
+                    throw new Error('Failed to get Supabase instance');
+                }
+                addDebugOutput('✓ Supabase initialized successfully');
+
+                // Test 3: Check authentication
+                addDebugOutput('Test 3: Checking authentication...');
+                const { data: { user }, error: authError } = await testSupabase.auth.getUser();
+                if (authError) {
+                    addDebugOutput(`Auth error: ${authError.message}`, true);
+                    throw authError;
+                }
+                if (!user) {
+                    addDebugOutput('No authenticated user found', true);
+                    throw new Error('No user authenticated');
+                }
+                addDebugOutput(`✓ User authenticated: ${user.email}`);
+
+                // Test 4: Check admin access
+                addDebugOutput('Test 4: Checking admin access...');
+                try {
+                    const isAdmin = await window.isUserAdmin(user.id);
+                    if (!isAdmin) {
+                        addDebugOutput('User is not an admin', true);
+                    } else {
+                        addDebugOutput('✓ User is admin');
+                    }
+                } catch (adminError) {
+                    addDebugOutput(`Admin check error: ${adminError.message}`, true);
+                }
+
+                // Test 5: Test database connection - schools table
+                addDebugOutput('Test 5: Querying schools table...');
+                const { data: schoolsData, error: schoolsError } = await testSupabase
+                    .from('schools')
+                    .select('count', { count: 'exact' });
+                
+                if (schoolsError) {
+                    addDebugOutput(`Schools query error: ${schoolsError.message}`, true);
+                    addDebugOutput(`Error code: ${schoolsError.code}`, true);
+                    addDebugOutput(`Error details: ${JSON.stringify(schoolsError.details)}`, true);
+                    throw schoolsError;
+                }
+                addDebugOutput(`✓ Schools table accessible`);
+
+                // Test 6: Test database connection - school_verification table
+                addDebugOutput('Test 6: Querying school_verification table...');
+                const { data: verifications, error: verError } = await testSupabase
+                    .from('school_verification')
+                    .select('*')
+                    .limit(5);
+
+                if (verError) {
+                    addDebugOutput(`Verification query error: ${verError.message}`, true);
+                    addDebugOutput(`Error code: ${verError.code}`, true);
+                    addDebugOutput(`Error details: ${JSON.stringify(verError.details)}`, true);
+                    throw verError;
+                }
+                addDebugOutput(`✓ school_verification table accessible`);
+                addDebugOutput(`  Found ${verifications?.length || 0} records`);
+
+                // Test 7: Test the full query used in loadVerifications
+                addDebugOutput('Test 7: Testing full verification query...');
+                const { data: fullData, error: fullError } = await testSupabase
+                    .from('school_verification')
+                    .select(`
+                        *,
+                        schools:school_id (id, name, email, phone, created_at)
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (fullError) {
+                    addDebugOutput(`Full query error: ${fullError.message}`, true);
+                    addDebugOutput(`Error code: ${fullError.code}`, true);
+                    addDebugOutput(`Error details: ${JSON.stringify(fullError.details)}`, true);
+                    throw fullError;
+                }
+                addDebugOutput(`✓ Full verification query successful`);
+                addDebugOutput(`  Retrieved ${fullData?.length || 0} records with school info`);
+
+                // All tests passed
+                addDebugOutput('');
+                addDebugOutput('✅ ALL TESTS PASSED - Database connection is working!');
+                addDebugOutput('The issue may be with the UI initialization or rendering.');
+
+            } catch (error) {
+                addDebugOutput('');
+                addDebugOutput(`❌ TEST FAILED: ${error.message}`, true);
+                addDebugOutput(`Error type: ${error.name}`, true);
+                if (error.code) addDebugOutput(`Error code: ${error.code}`, true);
+                if (error.details) addDebugOutput(`Details: ${JSON.stringify(error.details)}`, true);
+                if (error.hint) addDebugOutput(`Hint: ${error.hint}`, true);
+                
+                addDebugOutput('');
+                addDebugOutput('Troubleshooting steps:', true);
+                addDebugOutput('1. Check your Supabase project URL and API key', true);
+                addDebugOutput('2. Verify RLS policies are configured correctly', true);
+                addDebugOutput('3. Check browser console for more detailed error messages', true);
+                addDebugOutput('4. Make sure your user has admin role in the database', true);
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Students Overview - Pencil Royal Admin</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="logo">
+        <img src="../assets/img/logo.jpg" alt="Pencil Royals Logo" style="height: 50px; width: auto; object-fit: contain; margin-right: 12px;">
+        <span style="vertical-align: middle; font-size: 20px;">Pencil Royals</span>
+      </div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="schools-approval.html">Approvals</a>
+        <a href="competitions.html">Competitions</a>
+        <a href="students-overview.html" class="active">Students</a>
+        <a href="results-management.html">Results</a>
+        <button id="logoutBtn" class="btn outline">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>All Students</h1>
+    <input type="text" id="searchStudent" placeholder="Search students..." class="search-bar">
+    <ul id="studentOverview" class="student-list mt-2"></ul>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    async function loadStudents() {
+      const { data: students } = await supabase.from('students').select('*, school_id(name)');
+      const list = document.getElementById('studentOverview');
+      list.innerHTML = '';
+      students.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = `${s.name} (${s.gender}, Age: ${s.age || 'N/A'}) - School: ${s.school_id.name}`;
+        list.appendChild(li);
+      });
+    }
+    loadStudents();
+
+    document.getElementById('searchStudent').addEventListener('input', () => {
+      // Add search logic here
+    });
+  </script>
+</body>
+</html>

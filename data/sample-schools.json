@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "name": "Sample School 1",
+    "location": "Kampala"
+  },
+  {
+    "id": "2",
+    "name": "Sample School 2",
+    "location": "Gulu"
+  }
+]

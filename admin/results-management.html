@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Results - Pencil Royal Admin</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="logo">
+        <img src="../assets/img/logo.jpg" alt="Pencil Royals Logo" style="height: 50px; width: auto; object-fit: contain; margin-right: 12px;">
+        <span style="vertical-align: middle; font-size: 20px;">Pencil Royals</span>
+      </div>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="schools-approval.html">Approvals</a>
+        <a href="competitions.html">Competitions</a>
+        <a href="students-overview.html">Students</a>
+        <a href="results-management.html" class="active">Results</a>
+        <button id="logoutBtn" class="btn outline">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Manage Results</h1>
+    <form id="resultForm">
+      <div class="form-group">
+        <label for="schoolId">School ID</label>
+        <input type="text" id="schoolId" required/>
+      </div>
+      <div class="form-group">
+        <label for="rank">Rank</label>
+        <input type="number" id="rank" required/>
+      </div>
+      <div class="form-group">
+        <label for="score">Score</label>
+        <input type="number" id="score" required/>
+      </div>
+      <button type="submit" class="btn primary">Save Result</button>
+    </form>
+    <table id="resultsTable" class="mt-2">
+      <thead>
+        <tr>
+          <th>School</th>
+          <th>Rank</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    document.getElementById('resultForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const schoolId = document.getElementById('schoolId').value;
+      const rank = parseInt(document.getElementById('rank').value);
+      const score = parseInt(document.getElementById('score').value);
+      const { error } = await supabase.from('results').upsert({ school_id: schoolId, rank, score });
+      if (!error) {
+        showAlert('success', 'Result saved');
+        loadResults();
+      }
+    });
+
+    async function loadResults() {
+      const { data: results } = await supabase.from('results').select('rank, score, school_id(name)');
+      const tbody = document.querySelector('#resultsTable tbody');
+      tbody.innerHTML = '';
+      results.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.school_id.name}</td><td>${r.rank}</td><td>${r.score}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    loadResults();
+  </script>
+</body>
+</html>
